@@ -11,7 +11,7 @@ const initialModel = {
   ],
 };
 
-const root = document.querySelector("#main");
+const root = document.querySelector("#todo");
 
 const TodoCreation = ({updateModel}) => ({
   events: [
@@ -37,6 +37,15 @@ const TodoCreation = ({updateModel}) => ({
         });
       },
     },
+    {
+      selector: "button#btnCancel",
+      ev: 'click',
+      handler: (e) => {
+          updateModel({
+              todoCreation: { state: 'INIT' }
+          })
+      }
+    }
   ],
   template: (model) => `
         <div class="todocreation">
@@ -49,7 +58,7 @@ const TodoCreation = ({updateModel}) => ({
                         <div class="todo-create-panel">
                             <div class="form-input">
                                 <label for="title">title </label>
-                                <input class="form-input__textbox" type="text" name="title" maxlength="30"/>
+                                <input class="form-input__textbox" type="text" name="title" maxlength="30" required/>
                             </div>
                             <div class="form-input">
                                 <label for="importance">importance </label>
@@ -61,9 +70,10 @@ const TodoCreation = ({updateModel}) => ({
                             </div>
                             <div class="todo-create-panel__area form-input">
                                 <label for="description">description </label>
-                                <textarea class="form-input__textbox" name="description"></textarea>
+                                <textarea class="form-input__textbox" name="description" rows="4"></textarea>
                             </div>
                             <div class="todo-create-panel__button form-input">
+                                <button class="button" id="btnCancel">Cancel</button>
                                 <button class="button" id="btnCreate">Create</button>
                             </div>
                         </div>
@@ -75,32 +85,32 @@ const TodoCreation = ({updateModel}) => ({
 const App = ({updateModel}) => ({  
     events: [...TodoCreation({updateModel}).events],
     template: (model) => `
-            <div class="main">
-                ${TodoCreation({updateModel}).template(model)}
-                <div class="todolist">
-                    ${model.todos.map(
-                      (todo) => `
-                        <div class="todolist__todo">
-                            <div class="form-input">
-                              <label for="title">title</label>
-                              <input class="form-input__textbox--disabled" type="text" name="title" value="${todo.title}" disabled/>
-                            </div>
-                            <div class="form-input">
-                              <label for="importance">importance</label>
-                              <input class="form-input__textbox--disabled" type="number" name="importance" value="${todo.importance}" disabled/>
-                            </div>
-                            <div class="form-input">
-                              <label for="dueDate">due date</label>
-                              <input class="form-input__textbox--disabled" type="date" name="dueDate" value="${todo.dueDate}" disabled/>
-                            </div>
-                            <div class="form-input">
-                              <label for="description">description</label>
-                              <p class="form-input__textbox-disabled" name="description">${todo.description}</p>
-                            </div>
-                        </div>`
-                    )}
-                <div>
-            </div>`,
+        <div class="main">
+            <h1>Note App</h1>
+            ${TodoCreation({updateModel}).template(model)}
+            <div class="todolist">
+              ${model.todos.map((todo) => `
+                  <div class="todolist__todo">
+                      <div class="todo-property">
+                        <label for="title">title</label>
+                        <p class="todo-property__value" name="title">${todo.title}</p>
+                      </div>
+                      <div class="todo-property">
+                        <label for="importance">importance</label>
+                        <p class="todo-property__value" name="importance">${todo.importance}</p>
+                      </div>
+                      <div class="todo-property">
+                        <label for="dueDate">due date</label>
+                        <p class="todo-property__value" name="dueDate">${todo.dueDate}</p>
+                      </div>
+                      <div class="todo-property">
+                        <label for="description">description</label>
+                        <p class="todo-property__value" name="description">${todo.description}</p>
+                      </div>
+                  </div>`
+              )}
+            <div>
+        </div>`,
 });
 
 const { render } = initMyApplication(initialModel, root, App)
