@@ -1,4 +1,6 @@
-let model = {
+import initMyApplication from "./my-application.js";
+
+const initialModel = {
   todoCreation: { state: "INIT" },
   todos: [
     {
@@ -10,28 +12,8 @@ let model = {
 };
 
 const root = document.querySelector("#main");
-const registeredEvents = [];
-const render = () => {
-  const { events, template } = App();
-  registeredEvents.forEach(({ selector, ev, handler }) => {
-    const target = root.querySelector(selector);
-    if (target) target.removeEventListener(ev, handler);
-  });
-  root.innerHTML = template(model);
-  events.forEach(({ selector, ev, handler }) => {
-    const target = root.querySelector(selector);
-    if (target) {
-      target.addEventListener(ev, handler);
-      registeredEvents.push({ selector, ev, handler });
-    }
-  });
-};
-const updateModel = (updated) => {
-  model = { ...model, ...updated };
-  render();
-};
 
-const TodoCreation = () => ({
+const TodoCreation = ({updateModel}) => ({
   events: [
     {
       selector: "button#btnNew",
@@ -51,7 +33,7 @@ const TodoCreation = () => ({
         ).value;
         updateModel({
           todoCreation: { state: "INIT" },
-          todos: [...model.todos, { title, importance, dueDate, description }],
+          todos: [...initialModel.todos, { title, importance, dueDate, description }],
         });
       },
     },
@@ -90,12 +72,11 @@ const TodoCreation = () => ({
         </div>`,
 });
 
-const App = () => {
-  return {
-    events: [...TodoCreation().events],
+const App = ({updateModel}) => ({  
+    events: [...TodoCreation({updateModel}).events],
     template: (model) => `
             <div class="main">
-                ${TodoCreation().template(model)}
+                ${TodoCreation({updateModel}).template(model)}
                 <div class="todolist">
                     ${model.todos.map(
                       (todo) => `
@@ -114,13 +95,13 @@ const App = () => {
                             </div>
                             <div class="form-input">
                               <label for="description">description</label>
-                              <textarea class="form-input__textbox-disabled" name="description" disabled>${todo.description}</textarea>
+                              <p class="form-input__textbox-disabled" name="description">${todo.description}</p>
                             </div>
                         </div>`
                     )}
                 <div>
             </div>`,
-  };
-};
+});
 
+const { render } = initMyApplication(initialModel, root, App)
 render();
