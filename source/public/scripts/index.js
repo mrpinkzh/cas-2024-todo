@@ -1,19 +1,23 @@
 import initMyApplication from "./my-application.js";
+import TodoList from "./TodoList.js";
 
 const initialModel = {
   todoCreation: { state: "INIT" },
-  todos: [
-    {
-      title: "first todo",
-      importance: 1,
-      description: "this is the first one",
-    },
-  ],
+  todoList : {
+    sortBy: { state: "SORTED", criteria: "title", criterias: [ "title", "importance" ] },
+    todos: [
+      {
+        title: "first todo",
+        importance: 1,
+        description: "this is the first one",
+      }
+    ]
+  }
 };
 
 const root = document.querySelector("#todo");
 
-const TodoCreation = ({updateModel}) => ({
+const TodoCreation = ({ model, updateModel }) => ({
   events: [
     {
       selector: "button#btnNew",
@@ -33,7 +37,7 @@ const TodoCreation = ({updateModel}) => ({
         ).value;
         updateModel({
           todoCreation: { state: "INIT" },
-          todos: [...initialModel.todos, { title, importance, dueDate, description }],
+          todoList: { ...model.todoList, todos: [ ...model.todoList.todos, { title, importance, dueDate, description } ] }
         });
       },
     },
@@ -82,34 +86,16 @@ const TodoCreation = ({updateModel}) => ({
         </div>`,
 });
 
-const App = ({updateModel}) => ({  
-    events: [...TodoCreation({updateModel}).events],
+const App = (applicationContext) => ({  
+    events: [
+      ...TodoCreation(applicationContext).events,
+      ...TodoList(applicationContext).events
+    ],
     template: (model) => `
         <div class="main">
             <h1>Note App</h1>
-            ${TodoCreation({updateModel}).template(model)}
-            <div class="todolist">
-              ${model.todos.map((todo) => `
-                  <div class="todolist__todo">
-                      <div class="todo-property">
-                        <label for="title">title</label>
-                        <p class="todo-property__value" name="title">${todo.title}</p>
-                      </div>
-                      <div class="todo-property">
-                        <label for="importance">importance</label>
-                        <p class="todo-property__value" name="importance">${todo.importance}</p>
-                      </div>
-                      <div class="todo-property">
-                        <label for="dueDate">due date</label>
-                        <p class="todo-property__value" name="dueDate">${todo.dueDate}</p>
-                      </div>
-                      <div class="todo-property">
-                        <label for="description">description</label>
-                        <p class="todo-property__value" name="description">${todo.description}</p>
-                      </div>
-                  </div>`
-              )}
-            <div>
+            ${TodoCreation(applicationContext).template(model)}
+            ${TodoList(applicationContext).template(model)}
         </div>`,
 });
 

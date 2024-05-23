@@ -3,7 +3,7 @@ export default function initMyApplication(initialModel, root, App) {
     let model = { ...initialModel };
     const registeredEvents = [];
 
-    const myApplicationContext = { }; 
+    const myApplicationContext = { model }; 
 
     const render = () => {
 
