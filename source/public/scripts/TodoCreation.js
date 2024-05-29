@@ -1,6 +1,20 @@
 
 import { now } from "./utils.js";
 
+const validateAndDeconstructForm = (form) => {
+    if (form.checkValidity())
+        return {
+            valid: true,
+            todo: {
+                title: form.querySelector('input[name="title"]').value,
+                importance: form.querySelector('input[name="importance"]').value,
+                dueDate: form.querySelector('input[name="dueDate"]').value,
+                description: form.querySelector('textarea[name="description"]').value
+            }
+        }
+    return { valid: false };
+}
+
 const TodoCreation = ({model, updateModel}) => ({
     events: [
         {
@@ -14,22 +28,31 @@ const TodoCreation = ({model, updateModel}) => ({
           handler: (e) => {
             const form = e.target.closest("form");
     
-            if (!form.checkValidity()){
-              form.reportValidity();
-              return;
+            const { valid, todo } = validateAndDeconstructForm(form);
+
+            if (valid){
+                updateModel({
+                    todoCreation: { state: "INIT" },
+                    todoList: { ...model.todoList, todos: [ ...model.todoList.todos, todo ] }
+                  });
+            } else {
+                form.reportValidity();
             }
-    
-            const title = form.querySelector('input[name="title"]').value;
-            const importance = form.querySelector('input[name="importance"]').value;
-            const dueDate = form.querySelector('input[name="dueDate"]').value;
-            const description = form.querySelector(
-              'textarea[name="description"]'
-            ).value;
-    
-            updateModel({
-              todoCreation: { state: "INIT" },
-              todoList: { ...model.todoList, todos: [ ...model.todoList.todos, { title, importance, dueDate, description } ] }
-            });
+          },
+        },
+        {
+          selector: "button#btnCreateAndNew",
+          ev: "click",
+          handler: (e) => {
+            const form = e.target.closest("form");
+
+            const { valid, todo } = validateAndDeconstructForm(form);
+
+            if (valid){
+                updateModel({ todoList: { ...model.todoList, todos: [ ...model.todoList.todos, todo ] } });
+            } else {
+                form.reportValidity();
+            }
           },
         },
         {
@@ -67,8 +90,9 @@ const TodoCreation = ({model, updateModel}) => ({
                                     <textarea class="form-input__textbox" name="description" rows="4"></textarea>
                                 </div>
                                 <div class="todo-create-panel__button form-input">
-                                    <button class="button" id="btnCancel">Cancel</button>
+                                    <button class="button button-secondary" id="btnCancel">Cancel</button>
                                     <button class="button" id="btnCreate">Create</button>
+                                    <button class="button button-secondary" id="btnCreateAndNew">Create & New</button>
                                 </div>
                             </div>
                         </form>`
