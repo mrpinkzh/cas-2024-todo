@@ -23,26 +23,25 @@ const TodoList = ({model, updateModel}) => ({
                     todoList: {
                         ...model.todoList,
                         sortBy: { ...model.todoList.sortBy, state: 'SORTED', criteria },
-                        todos: sortTodos(model.todoList.todos, criteria)
                     },
                 })
             }
         }
     ],
-    template: (model) => `
+    template: (m) => `
         <div class="todolist">
             <div class="todolist__sorting">
-                ${model.todoList.sortBy.state === "SORTED"
-                    ? ` <button class="button" id="btnSort">Sort by: ${model.todoList.sortBy.criteria}</button>`
+                ${m.todoList.sortBy.state === "SORTED"
+                    ? ` <button class="button" id="btnSort">Sort by: ${m.todoList.sortBy.criteria}</button>`
                     : ` <label>Sort by:</label>
                         <div id="sortButtonList" style="display: inline">
-                            ${model.todoList.sortBy.criterias.map(criteria => 
+                            ${m.todoList.sortBy.criterias.map(criteria => 
                                 `<button data-sorting="${criteria}" class="button">${criteria}</button>`
                             ).join('')}
                         </div>`
                 }
             </div>
-            ${model.todoList.todos.map((todo) => `
+            ${sortTodos(m.todoList.todos, m.todoList.sortBy.criteria).map((todo) => `
                 <div class="todolist__todo">
                     <div class="todo-property">
                     <label for="title">title</label>

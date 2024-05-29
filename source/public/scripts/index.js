@@ -1,18 +1,18 @@
 import initMyApplication from "./my-application.js";
 import TodoList from "./TodoList.js";
-import { sortTodos } from "./utils.js";
+import { now } from "./utils.js";
 
 const initialModel = {
   todoCreation: { state: "INIT" },
   todoList : {
     sortBy: { state: "SORTED", criteria: "title asc", criterias: [ "title asc", "title desc", "most important", "least important" ] },
-    todos: sortTodos([
+    todos: [
       {
         title: "first todo",
         importance: 1,
         description: "this is the first one",
       }
-    ], 'title asc')
+    ]
   }
 };
 
@@ -30,12 +30,19 @@ const TodoCreation = ({ model, updateModel }) => ({
       ev: "click",
       handler: (e) => {
         const form = e.target.closest("form");
+
+        if (!form.checkValidity()){
+          form.reportValidity();
+          return;
+        }
+
         const title = form.querySelector('input[name="title"]').value;
         const importance = form.querySelector('input[name="importance"]').value;
         const dueDate = form.querySelector('input[name="dueDate"]').value;
         const description = form.querySelector(
           'textarea[name="description"]'
         ).value;
+
         updateModel({
           todoCreation: { state: "INIT" },
           todoList: { ...model.todoList, todos: [ ...model.todoList.todos, { title, importance, dueDate, description } ] }
@@ -52,10 +59,9 @@ const TodoCreation = ({ model, updateModel }) => ({
       }
     }
   ],
-  template: (model) => `
+  template: (m) => `
         <div class="todocreation">
-            ${
-              model.todoCreation.state === "INIT"
+            ${m.todoCreation.state === "INIT"
                 ? ` <div class="todo-new-panel">
                         <button class="button" id="btnNew">New</button>
                     </div>`
@@ -63,15 +69,15 @@ const TodoCreation = ({ model, updateModel }) => ({
                         <div class="todo-create-panel">
                             <div class="form-input">
                                 <label for="title">title </label>
-                                <input class="form-input__textbox" type="text" name="title" maxlength="30" required/>
+                                <input class="form-input__textbox" type="text" name="title" required/>
                             </div>
                             <div class="form-input">
                                 <label for="importance">importance </label>
-                                <input class="form-input__textbox" type="number" name="importance"/>
+                                <input class="form-input__textbox" type="number" name="importance" min="1" max="10" value="1" required/>
                             </div>
                             <div class="form-input">
                                 <label for="dueDate">due date </label>
-                                <input class="form-input__textbox" type="date" name="dueDate" />
+                                <input class="form-input__textbox" type="date" name="dueDate" value=${now()} required/>
                             </div>
                             <div class="todo-create-panel__area form-input">
                                 <label for="description">description </label>
