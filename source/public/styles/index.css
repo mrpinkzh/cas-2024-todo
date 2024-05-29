@@ -7,7 +7,7 @@
     background: white;
     border: 0.2em solid black;
     border-radius: 0.2em;
-    font-size: 0.8em;
+    font-size: 1em;
     padding: 0.4em 0.6em 0.2em 0.6em;
     margin-right: 0.3em;
     margin-bottom: 0.1em;
@@ -61,6 +61,10 @@
 .todo-create-panel__button {
     grid-column: 3;
     justify-content: end;
+}
+
+.todolist__sorting {
+    margin: 0.2em;
 }
 
 .todolist__todo {

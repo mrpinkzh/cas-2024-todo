@@ -1,9 +1,8 @@
 export default function initMyApplication(initialModel, root, App) {
     
-    let model = { ...initialModel };
     const registeredEvents = [];
 
-    const myApplicationContext = { model }; 
+    const myApplicationContext = { model: { ...initialModel } }; 
 
     const render = () => {
 
@@ -14,7 +13,7 @@ export default function initMyApplication(initialModel, root, App) {
             if (target) target.removeEventListener(ev, handler);
         });
 
-        root.innerHTML = template(model);
+        root.innerHTML = template(myApplicationContext.model);
         
         events.forEach(({ selector, ev, handler }) => {
             const target = root.querySelector(selector);
@@ -28,7 +27,7 @@ export default function initMyApplication(initialModel, root, App) {
     myApplicationContext.render = render;
 
     myApplicationContext.updateModel = (updated) => {
-        model = { ...model, ...updated };
+        myApplicationContext.model = { ...myApplicationContext.model, ...updated };
         render();
     }
 

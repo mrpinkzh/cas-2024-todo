@@ -1,17 +1,18 @@
 import initMyApplication from "./my-application.js";
 import TodoList from "./TodoList.js";
+import { sortTodos } from "./utils.js";
 
 const initialModel = {
   todoCreation: { state: "INIT" },
   todoList : {
-    sortBy: { state: "SORTED", criteria: "title", criterias: [ "title", "importance" ] },
-    todos: [
+    sortBy: { state: "SORTED", criteria: "title asc", criterias: [ "title asc", "title desc", "most important", "least important" ] },
+    todos: sortTodos([
       {
         title: "first todo",
         importance: 1,
         description: "this is the first one",
       }
-    ]
+    ], 'title asc')
   }
 };
 
@@ -99,5 +100,5 @@ const App = (applicationContext) => ({
         </div>`,
 });
 
-const { render } = initMyApplication(initialModel, root, App)
+const { render } = initMyApplication(initialModel, root, App);
 render();
