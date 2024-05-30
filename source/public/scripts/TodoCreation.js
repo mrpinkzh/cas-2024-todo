@@ -1,13 +1,15 @@
 
-const validateAndDeconstructForm = (form) => {
+const validateAndDeconstructForm = (id, form) => {
     if (form.checkValidity())
         return {
             valid: true,
             todo: {
+                id,
                 title: form.querySelector('input[name="title"]').value,
                 importance: form.querySelector('input[name="importance"]').value,
                 dueDate: form.querySelector('input[name="dueDate"]').value,
-                description: form.querySelector('textarea[name="description"]').value
+                description: form.querySelector('textarea[name="description"]').value,
+                done: false
             }
         }
     return { valid: false };
@@ -26,16 +28,16 @@ const TodoCreation = ({model, updateModel}) => ({
           handler: (e) => {
             const form = e.target.closest("form");
     
-            const { valid, todo } = validateAndDeconstructForm(form);
+            const id = model.todoList.todos.length + 1;
+            const { valid, todo } = validateAndDeconstructForm(id, form);
 
-            if (valid){
+            if (valid)
                 updateModel({
                     todoCreation: { state: "INIT" },
                     todoList: { ...model.todoList, todos: [ ...model.todoList.todos, todo ] }
                   });
-            } else {
+            else 
                 form.reportValidity();
-            }
           },
         },
         {
@@ -44,23 +46,24 @@ const TodoCreation = ({model, updateModel}) => ({
           handler: (e) => {
             const form = e.target.closest("form");
 
-            const { valid, todo } = validateAndDeconstructForm(form);
+            const id = model.todoList.todos.length + 1;
+            const { valid, todo } = validateAndDeconstructForm(id, form);
 
-            if (valid){
-                updateModel({ todoList: { ...model.todoList, todos: [ ...model.todoList.todos, todo ] } });
-            } else {
+            if (valid)
+                updateModel({ 
+                    todoList: { 
+                        ...model.todoList, 
+                        todos: [ ...model.todoList.todos, todo ] 
+                    } 
+                });
+            else
                 form.reportValidity();
-            }
           },
         },
         {
           selector: "button#btnCancel",
           ev: 'click',
-          handler: (e) => {
-              updateModel({
-                  todoCreation: { state: 'INIT' }
-              })
-          }
+          handler: () => { updateModel({ todoCreation: { state: 'INIT' } }); }
         }
       ],
       template: (m) => `

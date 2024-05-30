@@ -26,6 +26,24 @@ const TodoList = ({model, updateModel}) => ({
                     },
                 })
             }
+        },
+        {
+            selector: 'button#btnDone',
+            ev: 'click',
+            handler: (e) => {
+                const todoId = Number(e.target.dataset.id);
+                updateModel({
+                    todoList: {
+                        ...model.todoList,
+                        todos: [
+                            ...model.todoList.todos.filter(todo => todo.id !== todoId),
+                            ...model.todoList.todos
+                                .filter(todo => todo.id === todoId)
+                                .map(todo => ({ ...todo, done: true }))
+                        ]
+                    }
+                });
+            }
         }
     ],
     template: (m) => `
@@ -44,7 +62,7 @@ const TodoList = ({model, updateModel}) => ({
                         }
                     </div>
                     ${sortTodos(m.todoList.todos, m.todoList.sortBy.criteria).map((todo) => `
-                        <div class="todolist__todo">
+                        <div class="todolist__todo ${todo.done ? 'todolist__todo--done' : ''}">
                             <div class="todo-property">
                                 <label for="title">title</label>
                                 <p class="todo-property__value" name="title">${todo.title}</p>
@@ -62,6 +80,14 @@ const TodoList = ({model, updateModel}) => ({
                             <div class="todo-property">
                                 <label for="description">description</label>
                                 <p class="todo-property__value" name="description">${todo.description}</p>
+                            </div>
+                            <div class="todo-property--buttons">
+                                ${todo.done 
+                                    ? ``
+                                    : `
+                                    <button class="button" id="btnDone" data-id="${todo.id}">
+                                        Done
+                                    </button>`}
                             </div>
                         </div>`
                     )}`

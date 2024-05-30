@@ -18,12 +18,13 @@ const initialModel = {
       ],
     },
     todos: [
-      // {
-      //   title: "first todo",
-      //   importance: 1,
-      //   description: "this is the first one",
-      //   dueDate: '2024-04-29'
-      // },
+      {
+        id: 1,
+        title: "first todo",
+        importance: 1,
+        description: "this is the first one",
+        dueDate: '2024-04-29'
+      },
     ],
   },
 };
