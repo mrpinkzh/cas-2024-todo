@@ -22,6 +22,14 @@ export const sortTodos = (todos, criteria) => {
         );
     }
   };
+
+  export const filterTodos = (todos, criteria) => {
+    switch (criteria) {
+      case "only pending": return todos.filter(todo => !todo.done);
+      case "only done": return todos.filter(todo => todo.done);
+      default: return todos;
+    }
+  }
   
   export const now = () => {
     const date = new Date();

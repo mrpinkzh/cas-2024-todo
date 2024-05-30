@@ -17,6 +17,11 @@ const initialModel = {
         "last due",
       ],
     },
+    filter: {
+      state: "FILTERED",
+      criteria: "none",
+      criterias: [ "only pending", "only done", "none" ]
+    },
     todos: [
       {
         id: 1,

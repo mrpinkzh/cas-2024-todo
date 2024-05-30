@@ -1,4 +1,4 @@
-import { sortTodos } from "./utils.js";
+import { sortTodos, filterTodos } from "./utils.js";
 
 const TodoList = ({model, updateModel}) => ({
     events: [
@@ -23,6 +23,31 @@ const TodoList = ({model, updateModel}) => ({
                     todoList: {
                         ...model.todoList,
                         sortBy: { ...model.todoList.sortBy, state: 'SORTED', criteria },
+                    },
+                })
+            }
+        },
+        {
+            selector: 'button#btnFilter',
+            ev: 'click',
+            handler: () => {
+                updateModel({ 
+                    todoList: { 
+                        ...model.todoList, 
+                        filter: { ...model.todoList.filter, state: 'CHOOSE' }
+                    } 
+                })
+            }
+        },
+        {
+            selector: '#filterButtonList',
+            ev: 'click',
+            handler: (e) => {
+                const criteria = e.target.dataset.filtering;
+                updateModel({
+                    todoList: {
+                        ...model.todoList,
+                        filter: { ...model.todoList.filter, state: 'FILTERED', criteria },
                     },
                 })
             }
@@ -53,15 +78,24 @@ const TodoList = ({model, updateModel}) => ({
                     <div class="todolist__sorting">
                         ${m.todoList.sortBy.state === "SORTED"
                             ? ` <button class="button" id="btnSort">Sort by: ${m.todoList.sortBy.criteria}</button>`
-                            : ` <label>Sort by:</label>
+                            : ` <label for="sortButtonList">Sort by:</label>
                                 <div id="sortButtonList" class="button-list">
                                     ${m.todoList.sortBy.criterias.map(criteria => 
                                         `<button data-sorting="${criteria}" class="button">${criteria}</button>`
                                     ).join('')}
                                 </div>`
                         }
+                        ${m.todoList.filter.state === "FILTERED"
+                            ? ` <button class="button" id="btnFilter">Filter: ${m.todoList.filter.criteria}</button>`
+                            : ` <label>Filter: </label>
+                                <div id="filterButtonList" class="button-list">
+                                    ${m.todoList.filter.criterias.map(criteria => 
+                                        `<button data-filtering="${criteria}" class="button">${criteria}</button>`
+                                    ).join('')}
+                                </div>`
+                        }
                     </div>
-                    ${sortTodos(m.todoList.todos, m.todoList.sortBy.criteria).map((todo) => `
+                    ${sortTodos(filterTodos(m.todoList.todos, m.todoList.filter.criteria), m.todoList.sortBy.criteria).map((todo) => `
                         <div class="todolist__todo ${todo.done ? 'todolist__todo--done' : ''}">
                             <div class="todo-property">
                                 <label for="title">title</label>
@@ -83,11 +117,12 @@ const TodoList = ({model, updateModel}) => ({
                             </div>
                             <div class="todo-property--buttons">
                                 ${todo.done 
-                                    ? ``
+                                    ? `
+                                        <span>Done!</span>`
                                     : `
-                                    <button class="button" id="btnDone" data-id="${todo.id}">
-                                        Done
-                                    </button>`}
+                                        <button class="button" id="btnDone" data-id="${todo.id}">
+                                            Done
+                                        </button>`}
                             </div>
                         </div>`
                     )}`
