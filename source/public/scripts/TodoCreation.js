@@ -1,6 +1,4 @@
 
-import { now } from "./utils.js";
-
 const validateAndDeconstructForm = (form) => {
     if (form.checkValidity())
         return {
@@ -83,7 +81,7 @@ const TodoCreation = ({model, updateModel}) => ({
                                 </div>
                                 <div class="form-input">
                                     <label for="dueDate">due date </label>
-                                    <input class="form-input__textbox" type="date" name="dueDate" value=${now()} required/>
+                                    <input class="form-input__textbox" type="date" name="dueDate" />
                                 </div>
                                 <div class="todo-create-panel__area form-input">
                                     <label for="description">description </label>

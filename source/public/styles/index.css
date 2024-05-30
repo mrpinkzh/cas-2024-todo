@@ -27,6 +27,10 @@
     color: white;
 }
 
+.button-list {
+    display: inline;
+}
+
 .form-input {
     display: flex;
     flex-direction: column;
@@ -90,6 +94,10 @@
     margin: 0.2em;
     padding: 1em;
     height: 15em;
+}
+
+.todolist__empty {
+    padding: 1em;
 }
 
 .todo-property {
