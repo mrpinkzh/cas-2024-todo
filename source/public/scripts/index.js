@@ -34,8 +34,6 @@ const initialModel = {
   },
 };
 
-const root = document.querySelector("#todo");
-
 const App = (applicationContext) => ({
   events: [
     ...TodoCreation(applicationContext).events,
@@ -49,5 +47,5 @@ const App = (applicationContext) => ({
         </div>`,
 });
 
-const { render } = initMyApplication(initialModel, root, App);
+const { render } = initMyApplication(initialModel, '#todo', App);
 render();

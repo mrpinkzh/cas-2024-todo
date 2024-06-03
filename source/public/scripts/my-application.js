@@ -1,5 +1,6 @@
-export default function initMyApplication(initialModel, root, App) {
+export default function initMyApplication(initialModel, rootSelector, App) {
     
+    const root = document.querySelector(rootSelector)
     const registeredEvents = [];
 
     const myApplicationContext = { model: { ...initialModel } }; 
