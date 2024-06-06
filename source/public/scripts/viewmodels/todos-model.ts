@@ -1,9 +1,9 @@
 import { CreatingTodo, ShowCreationForm, ShowNewButton, TodoCreated, TodoCreationState } from "./todos-creation-states.js";
-import { TodosLoaded, TodosNotLoaded } from "./todos-loading-states.js";
+import { LoadingState, TodosLoaded, TodosNotLoaded } from "./todos-loading-states.js";
 
 export default class TodosModel {
     creation : TodoCreationState;
-    todoList: any;
+    todoList: LoadingState;
     
     constructor() {
         this.creation = new ShowNewButton()

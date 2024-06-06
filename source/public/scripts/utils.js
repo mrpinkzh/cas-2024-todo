@@ -41,7 +41,7 @@ export const sortTodos = (todos, criteria) => todos.sort(sortFunction(criteria))
 export const FILTER_CRITERIAS = {
   ONLY_PENDING: "only pending",
   ONLY_DONE: "only done",
-  NONE: "NONE",
+  NONE: "none",
   all() {
     return [
       this.ONLY_PENDING,
