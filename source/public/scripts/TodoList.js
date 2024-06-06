@@ -1,4 +1,5 @@
 import { sortTodos, filterTodos } from "./utils.js";
+import { TodosFiltered, TodosFiltering, TodosFilteringState, TodosLoadedState, TodosSorted, TodosSorting } from "./viewmodel.js";
 
 const TodoList = ({model, updateModel}) => ({
     events: [
@@ -6,7 +7,12 @@ const TodoList = ({model, updateModel}) => ({
             selector: 'button#btnSort',
             ev: 'click',
             handler: (e) => {
-                updateModel({
+                updateModel({ 
+                    state: new TodosLoadedState(
+                        model.state.todos,
+                        new TodosSorting(model.state.sortBy.criteria),
+                        model.state.filter
+                    ),
                     todoList: {
                         ...model.todoList,
                         sortBy: { ...model.todoList.sortBy, state: 'CHOOSE' }
@@ -20,6 +26,11 @@ const TodoList = ({model, updateModel}) => ({
             handler: (e) => {
                 const criteria = e.target.dataset.sorting;
                 updateModel({
+                    state: new TodosLoadedState(
+                        model.state.todos,
+                        new TodosSorted(criteria),
+                        model.state.filter
+                    ),
                     todoList: {
                         ...model.todoList,
                         sortBy: { ...model.todoList.sortBy, state: 'SORTED', criteria },
@@ -32,11 +43,11 @@ const TodoList = ({model, updateModel}) => ({
             ev: 'click',
             handler: () => {
                 updateModel({ 
-                    todoList: { 
-                        ...model.todoList, 
-                        filter: { ...model.todoList.filter, state: 'CHOOSE' }
-                    } 
-                })
+                    state: new TodosLoadedState(
+                        model.state.todos,
+                        model.state.sortBy,
+                        new TodosFiltering(model.state.filter.criteria)
+                    )})
             }
         },
         {
@@ -45,11 +56,11 @@ const TodoList = ({model, updateModel}) => ({
             handler: (e) => {
                 const criteria = e.target.dataset.filtering;
                 updateModel({
-                    todoList: {
-                        ...model.todoList,
-                        filter: { ...model.todoList.filter, state: 'FILTERED', criteria },
-                    },
-                })
+                    state: new TodosLoadedState(
+                        model.state.todos,
+                        model.state.sortBy,
+                        new TodosFiltered(criteria)
+                    )})
             }
         },
         {
@@ -73,29 +84,29 @@ const TodoList = ({model, updateModel}) => ({
     ],
     template: (m) => `
         <div class="todolist">
-            ${m.todoList.todos.length > 0
-                ? `
-                    <div class="todolist__sorting">
-                        ${m.todoList.sortBy.state === "SORTED"
-                            ? ` <button class="button" id="btnSort">Sort by: ${m.todoList.sortBy.criteria}</button>`
-                            : ` <label for="sortButtonList">Sort by:</label>
-                                <div id="sortButtonList" class="button-list">
-                                    ${m.todoList.sortBy.criterias.map(criteria => 
-                                        `<button data-sorting="${criteria}" class="button">${criteria}</button>`
-                                    ).join('')}
-                                </div>`
+          ${m.state.todos.length > 0
+            ? `
+                <div class="todolist__sorting">
+                  ${m.state.sortBy instanceof TodosSorted
+                    ? ` <button class="button" id="btnSort">Sort by: ${m.state.sortBy.criteria}</button>`
+                    : ` <label for="sortButtonList">Sort by:</label>
+                          <div id="sortButtonList" class="button-list">
+                            ${m.state.sortBy.criterias.map(criteria => `
+                              <button data-sorting="${criteria}" class="button">${criteria}</button>`)
+                              .join('')}
+                          </div>`
                         }
-                        ${m.todoList.filter.state === "FILTERED"
-                            ? ` <button class="button" id="btnFilter">Filter: ${m.todoList.filter.criteria}</button>`
-                            : ` <label>Filter: </label>
-                                <div id="filterButtonList" class="button-list">
-                                    ${m.todoList.filter.criterias.map(criteria => 
-                                        `<button data-filtering="${criteria}" class="button">${criteria}</button>`
-                                    ).join('')}
-                                </div>`
+                  ${m.state.filter instanceof TodosFiltered
+                    ? ` <button class="button" id="btnFilter">Filter: ${m.state.filter.criteria}</button>`
+                    : ` <label>Filter: </label>
+                          <div id="filterButtonList" class="button-list">
+                            ${m.state.filter.criterias.map(criteria => `
+                              <button data-filtering="${criteria}" class="button">${criteria}</button>`)
+                              .join('')}
+                          </div>`
                         }
-                    </div>
-                    ${sortTodos(filterTodos(m.todoList.todos, m.todoList.filter.criteria), m.todoList.sortBy.criteria).map((todo) => `
+                </div>
+                ${sortTodos(filterTodos(m.state.todos, m.state.filter.criteria), m.state.sortBy.criteria).map((todo) => `
                         <div class="todolist__todo ${todo.done ? 'todolist__todo--done' : ''}">
                             <div class="todo-property">
                                 <label for="title">title</label>

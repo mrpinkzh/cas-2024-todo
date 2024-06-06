@@ -1,4 +1,4 @@
-import todoService from "./todo-service.js";
+import todoService from "./services/todo-service.js";
 import { CreatingNewTodoState, TodosNotLoadedState, TodosLoadedState } from "./viewmodel.js";
 
 const validateAndDeconstructForm = (form) => {

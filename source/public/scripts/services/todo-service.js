@@ -1,4 +1,4 @@
-import httpService from './services/http-service.js';
+import httpService from './http-service.js';
 
 class TodoService {
     async getTodos () {
