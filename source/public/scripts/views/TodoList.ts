@@ -6,7 +6,7 @@ import { ShowEditMode, TodosLoaded } from "../viewmodels/todos-loading-states.js
 import TodosModel from "../viewmodels/todos-model.js";
 import { TodosSorted, TodosSorting } from '../viewmodels/todos-sorting-states.js'
 import Todo from "./Todo.js";
-import TodoEdit from "./TodoEdit.js";
+import TodoEdit, { validateAndDeconstructForm } from "./TodoEdit.js";
 import { TodoApplicationView } from "./TodoApplicationView.js";
 
 const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView => {
@@ -48,6 +48,26 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
         if (model.todoList instanceof TodosLoaded) {
             model.todoList.showReadOnlyMode();
             render();
+        }
+    }
+
+    const handleButtonUpdate = async(e) => {
+        if (model.todoList instanceof TodosLoaded) {
+            const form = e.target.closest("form");
+
+            const { valid, todo } = validateAndDeconstructForm(form);
+
+            if (valid){
+                const todoId = e.target.dataset.id;
+                await todoService.putTodo(todoId, { ...todo });
+                model.loadingTodos();
+                render();
+                const todos = await todoService.getTodos();
+                model.receivedTodos(todos);
+                render();
+            }
+            else 
+                form.reportValidity();
         }
     }
 
@@ -107,6 +127,8 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
                         await handleButtonEdit(e)
                     if (e.target.matches('button#btnCancelUpdate'))
                         await handleButtonCancelUpdate()
+                    if (e.target.matches('button#btnUpdate'))
+                        await handleButtonUpdate(e)
                 }
             }
         ],

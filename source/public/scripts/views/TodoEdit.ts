@@ -1,3 +1,17 @@
+export const validateAndDeconstructForm = (form) => {
+    if (form.checkValidity())
+        return {
+            valid: true,
+            todo: {
+                title: form.querySelector('input[name="title"]').value,
+                importance: form.querySelector('input[name="importance"]').value,
+                dueDate: form.querySelector('input[name="dueDate"]').value,
+                description: form.querySelector('textarea[name="description"]').value
+            }
+        }
+    return { valid: false };
+}
+
 const TodoEdit = (todo:any) => (`
     <form>
         <div class="todo-create-panel">
@@ -21,7 +35,7 @@ const TodoEdit = (todo:any) => (`
             </div>
             <div class="todo-create-panel-buttons form-input">
                 <button class="button button-secondary" id="btnCancelUpdate">Cancel</button>
-                <button class="button" id="btnUpate">Update</button>
+                <button class="button" id="btnUpdate" data-id="${todo._id}">Update</button>
             </div>
         </div>
     </form>`); 
