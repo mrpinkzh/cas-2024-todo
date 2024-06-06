@@ -22,9 +22,11 @@ const Todo = (todo:any) => (`
             <button class="button button-secondary" id="btnDelete" data-id="${todo._id}">
                 Delete
             </button>
+            <button class="button button-secondary btnEdit" data-id=${todo._id}>
+                Edit
+            </button>
             ${todo.done 
-                ? `
-                    <span>Done!</span>`
+                ? `<span>Done!</span>`
                 : `
                     <button class="button" id="btnDone" data-id="${todo._id}">
                         Done

@@ -19,9 +19,15 @@ export class TodosNotLoaded extends LoadingState {
 
 export class TodosLoaded extends LoadingState {
     todos: any[];
-    constructor(todos = [], sortingState = new TodosSorted(), filteringState = new TodosFiltered()) {
-        super(sortingState, filteringState)
-        this.todos = todos;
+    editMode: EditModeState;
+    constructor(
+        todos = [], 
+        sortingState = new TodosSorted(), 
+        filteringState = new TodosFiltered(),
+        editMode = new NoEditing()) {
+            super(sortingState, filteringState)
+            this.todos = todos;
+            this.editMode = editMode;
     }
 
     showSortCriterias() {
@@ -42,5 +48,22 @@ export class TodosLoaded extends LoadingState {
     filterWith(criteria) {
         if (this.filter instanceof TodosFiltering)
             this.filter = new TodosFiltered(criteria)
+    }
+
+    showEditMode(todoId) {
+        if (this.editMode instanceof NoEditing)
+            this.editMode = new ShowEditMode(todoId);
+    }
+}
+
+export abstract class EditModeState { }
+
+export class NoEditing extends EditModeState {}
+
+export class ShowEditMode extends EditModeState {
+    todoId: string;
+    constructor(todoId) {
+        super();
+        this.todoId = todoId;
     }
 }
