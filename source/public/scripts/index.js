@@ -1,11 +1,11 @@
 import initMyApplication from "./my-application.js";
-import { TodosLoadedState, TodosNotLoadedState, TodosSortingState, TodosSorted } from "./viewmodel.js";
 import todoService from "./services/todo-service.js";
 import TodoCreation from "./TodoCreation.js";
 import TodoList from "./TodoList.js";
+import { TodosNotLoaded, TodosLoaded } from "./viewmodels/todos-loading-states.js"
 
 const initialModel = {
-  state: new TodosNotLoadedState(),
+  state: new TodosNotLoaded(),
 };
 
 const App = (applicationContext) => ({
@@ -16,7 +16,7 @@ const App = (applicationContext) => ({
   template: (model) => `
         <div class="main">
             <h1>Note App</h1>
-            ${model.state instanceof TodosNotLoadedState
+            ${model.state instanceof TodosNotLoaded
               ? `Loading...`
               : `
                 ${TodoCreation(applicationContext).template(model)}
@@ -25,18 +25,9 @@ const App = (applicationContext) => ({
         </div>`,
 });
 
-const { render, model, updateModel } = initMyApplication(initialModel, '#todo', App);
+const { render, updateModel } = initMyApplication(initialModel, '#todo', App);
 render();
 
 todoService.getTodos()
   .then(todos => 
-    updateModel({ 
-      ...model, 
-      state: new TodosLoadedState(
-        todos,
-        new TodosSorted(TodosSortingState.TITLE_ASC())),
-      todoList: { 
-        ...model.todoList, 
-        todos 
-      } 
-  }));
+    updateModel({ state: new TodosLoaded(todos) }));

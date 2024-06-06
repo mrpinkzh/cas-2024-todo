@@ -1,5 +1,5 @@
 import todoService from "./services/todo-service.js";
-import { CreatingNewTodoState, TodosNotLoadedState, TodosLoadedState } from "./viewmodel.js";
+import { TodosNotLoaded, TodosLoaded, CreatingNewTodo } from "./viewmodels/todos-loading-states.js";
 
 const validateAndDeconstructForm = (form) => {
     if (form.checkValidity())
@@ -21,7 +21,11 @@ const TodoCreation = ({model, updateModel}) => ({
         {
           selector: "button#btnNew",
           ev: "click",
-          handler: () => updateModel({ state: new CreatingNewTodoState(model.state.todos) }),
+          handler: () => updateModel({ 
+            state: new CreatingNewTodo(
+                model.state.todos, 
+                model.state.sortBy, 
+                model.state.filter) }),
         },
         {
           selector: "button#btnCreate",
@@ -33,9 +37,9 @@ const TodoCreation = ({model, updateModel}) => ({
 
             if (valid) {
                 await todoService.postTodos(todo)
-                updateModel({ state: new TodosNotLoadedState()});
+                updateModel({ state: new TodosNotLoaded()});
                 const todos = await todoService.getTodos()
-                updateModel({ state: new TodosLoadedState(todos)})
+                updateModel({ state: new TodosLoaded(todos)})
             }
             else 
                 form.reportValidity();
@@ -51,9 +55,9 @@ const TodoCreation = ({model, updateModel}) => ({
 
             if (valid) {
                 await todoService.postTodos(todo)
-                updateModel({ state: new TodosNotLoadedState()});
+                updateModel({ state: new TodosNotLoaded()});
                 const todos = await todoService.getTodos()
-                updateModel({ state: new CreatingNewTodoState(todos)})
+                updateModel({ state: new CreatingNewTodo(todos)})
             }
             else
                 form.reportValidity();
@@ -62,12 +66,12 @@ const TodoCreation = ({model, updateModel}) => ({
         {
           selector: "button#btnCancel",
           ev: 'click',
-          handler: () => { updateModel({ state: new TodosLoadedState(model.state.todos) }); }
+          handler: () => { updateModel({ state: new TodosLoaded(model.state.todos) }); }
         }
       ],
       template: (m) => `
             <div class="todocreation">
-                ${m.state instanceof CreatingNewTodoState
+                ${m.state instanceof CreatingNewTodo
                     ? ` <form>
                             <div class="todo-create-panel">
                                 <div class="form-input">

@@ -1,5 +1,7 @@
-import { sortTodos, filterTodos } from "./utils.js";
-import { TodosFiltered, TodosFiltering, TodosFilteringState, TodosLoadedState, TodosSorted, TodosSorting } from "./viewmodel.js";
+import { filterPredicate, sortFunction } from "./utils.js";
+import { TodosFiltered, TodosFiltering } from './viewmodels/todos-filtering-states.js'
+import { TodosSorted, TodosSorting } from './viewmodels/todos-sorting-states.js'
+import { TodosLoaded } from "./viewmodels/todos-loading-states.js";
 
 const TodoList = ({model, updateModel}) => ({
     events: [
@@ -8,16 +10,11 @@ const TodoList = ({model, updateModel}) => ({
             ev: 'click',
             handler: () => {
                 updateModel({ 
-                    state: new TodosLoadedState(
+                    state: new TodosLoaded(
                         model.state.todos,
                         new TodosSorting(model.state.sortBy.criteria),
                         model.state.filter
-                    ),
-                    todoList: {
-                        ...model.todoList,
-                        sortBy: { ...model.todoList.sortBy, state: 'CHOOSE' }
-                    }
-                });
+                    )});
             }
         },
         {
@@ -26,16 +23,11 @@ const TodoList = ({model, updateModel}) => ({
             handler: (e) => {
                 const criteria = e.target.dataset.sorting;
                 updateModel({
-                    state: new TodosLoadedState(
+                    state: new TodosLoaded(
                         model.state.todos,
                         new TodosSorted(criteria),
                         model.state.filter
-                    ),
-                    todoList: {
-                        ...model.todoList,
-                        sortBy: { ...model.todoList.sortBy, state: 'SORTED', criteria },
-                    },
-                })
+                    )})
             }
         },
         {
@@ -43,7 +35,7 @@ const TodoList = ({model, updateModel}) => ({
             ev: 'click',
             handler: () => {
                 updateModel({ 
-                    state: new TodosLoadedState(
+                    state: new TodosLoaded(
                         model.state.todos,
                         model.state.sortBy,
                         new TodosFiltering(model.state.filter.criteria)
@@ -56,7 +48,7 @@ const TodoList = ({model, updateModel}) => ({
             handler: (e) => {
                 const criteria = e.target.dataset.filtering;
                 updateModel({
-                    state: new TodosLoadedState(
+                    state: new TodosLoaded(
                         model.state.todos,
                         model.state.sortBy,
                         new TodosFiltered(criteria)
@@ -106,7 +98,10 @@ const TodoList = ({model, updateModel}) => ({
                           </div>`
                         }
                 </div>
-                ${sortTodos(filterTodos(m.state.todos, m.state.filter.criteria), m.state.sortBy.criteria).map((todo) => `
+                ${m.state.todos
+                    .filter(filterPredicate(m.state.filter.criteria))
+                    .sort(sortFunction(m.state.sortBy.critera))
+                    .map((todo) => `
                         <div class="todolist-todo ${todo.done ? 'todolist-todo-done' : ''}">
                             <div class="todo-property">
                                 <label for="title">title</label>
