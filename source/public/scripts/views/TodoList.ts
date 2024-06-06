@@ -44,6 +44,13 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
         }
     }
 
+    const handleButtonCancelUpdate = async() => {
+        if (model.todoList instanceof TodosLoaded) {
+            model.todoList.showReadOnlyMode();
+            render();
+        }
+    }
+
     return ({
         events: [
             {
@@ -98,6 +105,8 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
                         await handleButtonDelete(e)
                     if (e.target.matches('button.btnEdit'))
                         await handleButtonEdit(e)
+                    if (e.target.matches('button#btnCancelUpdate'))
+                        await handleButtonCancelUpdate()
                 }
             }
         ],

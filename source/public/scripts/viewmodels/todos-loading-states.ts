@@ -54,6 +54,11 @@ export class TodosLoaded extends LoadingState {
         if (this.editMode instanceof NoEditing)
             this.editMode = new ShowEditMode(todoId);
     }
+
+    showReadOnlyMode() {
+        if (this.editMode instanceof ShowEditMode)
+            this.editMode = new NoEditing();
+    }
 }
 
 export abstract class EditModeState { }
