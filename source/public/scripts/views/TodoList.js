@@ -1,7 +1,7 @@
-import todoService from "./services/todo-service.js";
-import { filterPredicate, sortFunction } from "./utils.js";
-import { TodosFiltered } from './viewmodels/todos-filtering-states.js'
-import { TodosSorted } from './viewmodels/todos-sorting-states.js'
+import todoService from "../services/todo-service.js";
+import { filterPredicate, sortFunction } from "../utils.js";
+import { TodosFiltered } from '../viewmodels/todos-filtering-states.js'
+import { TodosSorted } from '../viewmodels/todos-sorting-states.js'
 
 const TodoList = ({model, render}) => ({
     events: [

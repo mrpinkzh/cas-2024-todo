@@ -1,7 +1,7 @@
 import initMyApplication from "./my-application.js";
 import todoService from "./services/todo-service.js";
-import TodoCreation from "./TodoCreation.js";
-import TodoList from "./TodoList.js";
+import TodoCreation from "./views/TodoCreation.js";
+import TodoList from "./views/TodoList.js";
 import TodosModel from "./viewmodels/todos-model.js"
 import { TodosNotLoaded } from "./viewmodels/todos-loading-states.js"
 

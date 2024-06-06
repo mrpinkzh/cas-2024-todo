@@ -1,5 +1,5 @@
-import todoService from "./services/todo-service.js";
-import { ShowCreationForm } from "./viewmodels/todos-creation-states.js";
+import todoService from "../services/todo-service.js";
+import { ShowCreationForm } from "../viewmodels/todos-creation-states.js";
 
 const validateAndDeconstructForm = (form) => {
     if (form.checkValidity())

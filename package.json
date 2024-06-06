@@ -5,10 +5,11 @@
   "main": "public/scripts/main.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
+    "start": "npm run typescript && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "stylelint": "stylelint \"**/*.css\"",
     "eslint": "eslint \"**/*.js\"",
+    "typescript": "tsc -p ./source/public/",
     "all": "npm run stylelint && npm run eslint  && node -e \"console.log('npm run all completed')\""
   },
   "author": "Michael Gfeller",
@@ -20,7 +21,8 @@
     "eslint-plugin-import": "^2.26.0",
     "prettier": "2.6.2",
     "stylelint": "^14.7.1",
-    "stylelint-config-standard": "^25.0.0"
+    "stylelint-config-standard": "^25.0.0",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
