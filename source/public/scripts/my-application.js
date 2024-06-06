@@ -18,8 +18,8 @@ export default function initMyApplication(initialModel, root, App) {
         events.forEach(({ selector, ev, handler }) => {
             const target = root.querySelector(selector);
             if (target) {
-            target.addEventListener(ev, handler);
-            registeredEvents.push({ selector, ev, handler });
+                target.addEventListener(ev, handler);
+                registeredEvents.push({ selector, ev, handler });
             }
         }); 
     }

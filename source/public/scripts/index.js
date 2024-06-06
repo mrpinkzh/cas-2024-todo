@@ -1,8 +1,11 @@
 import initMyApplication from "./my-application.js";
+import { TodosLoadedState, TodosNotLoadedState } from "./viewmodel.js";
+import todoService from "./todo-service.js";
 import TodoCreation from "./TodoCreation.js";
 import TodoList from "./TodoList.js";
 
 const initialModel = {
+  state: new TodosNotLoadedState(),
   todoCreation: { state: "INIT" },
   todoList: {
     sortBy: {
@@ -44,10 +47,29 @@ const App = (applicationContext) => ({
   template: (model) => `
         <div class="main">
             <h1>Note App</h1>
-            ${TodoCreation(applicationContext).template(model)}
-            ${TodoList(applicationContext).template(model)}
+            ${model.state instanceof TodosNotLoadedState
+              ? `Loading...`
+              : `
+                ${TodoCreation(applicationContext).template(model)}
+                ${TodoList(applicationContext).template(model)}`
+            }
         </div>`,
 });
 
-const { render } = initMyApplication(initialModel, root, App);
+const { render, model, updateModel } = initMyApplication(
+  initialModel,
+  root,
+  App
+);
 render();
+
+todoService.getTodos()
+  .then(todos => 
+    updateModel({ 
+      ...model, 
+      state: new TodosLoadedState(todos),
+      todoList: { 
+        ...model.todoList, 
+        todos 
+      } 
+  }));

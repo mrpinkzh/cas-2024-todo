@@ -1,10 +1,11 @@
+import todoService from "./todo-service.js";
+import { CreatingNewTodoState, TodosNotLoadedState, TodosLoadedState } from "./viewmodel.js";
 
-const validateAndDeconstructForm = (id, form) => {
+const validateAndDeconstructForm = (form) => {
     if (form.checkValidity())
         return {
             valid: true,
             todo: {
-                id,
                 title: form.querySelector('input[name="title"]').value,
                 importance: form.querySelector('input[name="importance"]').value,
                 dueDate: form.querySelector('input[name="dueDate"]').value,
@@ -20,22 +21,22 @@ const TodoCreation = ({model, updateModel}) => ({
         {
           selector: "button#btnNew",
           ev: "click",
-          handler: () => updateModel({ todoCreation: { state: "CREATE" } }),
+          handler: () => updateModel({ state: new CreatingNewTodoState(model.state.todos) }),
         },
         {
           selector: "button#btnCreate",
           ev: "click",
-          handler: (e) => {
+          handler: async (e) => {
             const form = e.target.closest("form");
     
-            const id = model.todoList.todos.length + 1;
-            const { valid, todo } = validateAndDeconstructForm(id, form);
+            const { valid, todo } = validateAndDeconstructForm(form);
 
-            if (valid)
-                updateModel({
-                    todoCreation: { state: "INIT" },
-                    todoList: { ...model.todoList, todos: [ ...model.todoList.todos, todo ] }
-                  });
+            if (valid) {
+                await todoService.postTodos(todo)
+                updateModel({ state: new TodosNotLoadedState()});
+                const todos = await todoService.getTodos()
+                updateModel({ state: new TodosLoadedState(todos)})
+            }
             else 
                 form.reportValidity();
           },
@@ -43,19 +44,17 @@ const TodoCreation = ({model, updateModel}) => ({
         {
           selector: "button#btnCreateAndNew",
           ev: "click",
-          handler: (e) => {
+          handler: async (e) => {
             const form = e.target.closest("form");
 
-            const id = model.todoList.todos.length + 1;
-            const { valid, todo } = validateAndDeconstructForm(id, form);
+            const { valid, todo } = validateAndDeconstructForm(form);
 
-            if (valid)
-                updateModel({ 
-                    todoList: { 
-                        ...model.todoList, 
-                        todos: [ ...model.todoList.todos, todo ] 
-                    } 
-                });
+            if (valid) {
+                await todoService.postTodos(todo)
+                updateModel({ state: new TodosNotLoadedState()});
+                const todos = await todoService.getTodos()
+                updateModel({ state: new CreatingNewTodoState(todos)})
+            }
             else
                 form.reportValidity();
           },
@@ -63,16 +62,13 @@ const TodoCreation = ({model, updateModel}) => ({
         {
           selector: "button#btnCancel",
           ev: 'click',
-          handler: () => { updateModel({ todoCreation: { state: 'INIT' } }); }
+          handler: () => { updateModel({ state: new TodosLoadedState(model.state.todos) }); }
         }
       ],
       template: (m) => `
             <div class="todocreation">
-                ${m.todoCreation.state === "INIT"
-                    ? ` <div class="todo-new-panel">
-                            <button class="button" id="btnNew">New</button>
-                        </div>`
-                    : ` <form>
+                ${m.state instanceof CreatingNewTodoState
+                    ? ` <form>
                             <div class="todo-create-panel">
                                 <div class="form-input">
                                     <label for="title">title </label>
@@ -97,6 +93,9 @@ const TodoCreation = ({model, updateModel}) => ({
                                 </div>
                             </div>
                         </form>`
+                    : ` <div class="todo-new-panel">
+                        <button class="button" id="btnNew">New</button>
+                    </div>`
                 }
             </div>`
 })

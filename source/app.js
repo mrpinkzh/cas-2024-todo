@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/api/todos', async (req, res) => {
     const todos = await getTodos();
     res.json(todos)
-    res.sendStatus(200);
+    res.end()
 })
 
 router.post('/api/todos', async (req, res) => {
@@ -17,7 +17,7 @@ router.post('/api/todos', async (req, res) => {
 })
 
 app.use(express.static('source/public'));
-app.use(bodyParser);
+app.use(bodyParser.json());
 app.use(router);
 
 export default app;
