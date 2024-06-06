@@ -13,7 +13,7 @@ export class TodosSorted extends State {
 export class TodosSorting extends State {
     constructor(currentCriteria) {
         super()
-        this.currentCriteria = currentCriteria
+        this.criteria = currentCriteria
         this.criterias = SORT_CRITERIAS.all()
     }
 }

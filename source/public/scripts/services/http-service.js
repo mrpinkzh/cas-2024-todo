@@ -16,6 +16,14 @@ class HttpService {
     async post(url, data, headers) {
         return this.ajax('post', url, data, headers);
     }
+
+    async put(url, data, headers) {
+        return this.ajax('put', url, data, headers);
+    }
+
+    async delete(url, data, headers) {
+        return this.ajax('delete', url, data, headers);
+    }
 }
 
 const httpService = new HttpService();

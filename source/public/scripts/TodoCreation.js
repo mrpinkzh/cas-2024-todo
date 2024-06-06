@@ -1,5 +1,5 @@
 import todoService from "./services/todo-service.js";
-import { TodosNotLoaded, TodosLoaded, CreatingNewTodo } from "./viewmodels/todos-loading-states.js";
+import { ShowCreationForm } from "./viewmodels/todos-creation-states.js";
 
 const validateAndDeconstructForm = (form) => {
     if (form.checkValidity())
@@ -16,16 +16,15 @@ const validateAndDeconstructForm = (form) => {
     return { valid: false };
 }
 
-const TodoCreation = ({model, updateModel}) => ({
+const TodoCreation = ({model, render}) => ({
     events: [
         {
           selector: "button#btnNew",
           ev: "click",
-          handler: () => updateModel({ 
-            state: new CreatingNewTodo(
-                model.state.todos, 
-                model.state.sortBy, 
-                model.state.filter) }),
+          handler: () => {
+            model.showCreationForm();
+            render() 
+          },
         },
         {
           selector: "button#btnCreate",
@@ -36,10 +35,17 @@ const TodoCreation = ({model, updateModel}) => ({
             const { valid, todo } = validateAndDeconstructForm(form);
 
             if (valid) {
+                model.creatingTodo()
+                render()
                 await todoService.postTodos(todo)
-                updateModel({ state: new TodosNotLoaded()});
+                model.todoCreated()
+                render()
+                model.loadingTodos()
+                render()
                 const todos = await todoService.getTodos()
-                updateModel({ state: new TodosLoaded(todos)})
+                model.receivedTodos(todos)
+                model.showNewButton();
+                render()
             }
             else 
                 form.reportValidity();
@@ -54,10 +60,17 @@ const TodoCreation = ({model, updateModel}) => ({
             const { valid, todo } = validateAndDeconstructForm(form);
 
             if (valid) {
+                model.creatingTodo()
+                render()
                 await todoService.postTodos(todo)
-                updateModel({ state: new TodosNotLoaded()});
+                model.todoCreated()
+                render()
+                model.loadingTodos()
+                render()
                 const todos = await todoService.getTodos()
-                updateModel({ state: new CreatingNewTodo(todos)})
+                model.receivedTodos(todos)
+                model.showCreationForm()
+                render()
             }
             else
                 form.reportValidity();
@@ -66,12 +79,15 @@ const TodoCreation = ({model, updateModel}) => ({
         {
           selector: "button#btnCancel",
           ev: 'click',
-          handler: () => { updateModel({ state: new TodosLoaded(model.state.todos) }); }
+          handler: () => { 
+            model.showNewButton()
+            render()
+          }
         }
       ],
       template: (m) => `
             <div class="todocreation">
-                ${m.state instanceof CreatingNewTodo
+                ${m.creation instanceof ShowCreationForm
                     ? ` <form>
                             <div class="todo-create-panel">
                                 <div class="form-input">

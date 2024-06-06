@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { getTodos, saveTodo } from './stores/todo-store.js';
+import { getTodos, getTodo, insertTodo, updateTodo, deleteTodo } from './stores/todo-store.js';
 
 const app = express();
 const router = express.Router();
@@ -12,7 +12,19 @@ router.get('/api/todos', async (req, res) => {
 })
 
 router.post('/api/todos', async (req, res) => {
-    await saveTodo(req.body);
+    await insertTodo(req.body);
+    res.sendStatus(200);
+})
+
+router.put('/api/todos/:id', async (req, res) => {
+    const { id } = req.params;
+    await updateTodo(id, req.body);
+    res.sendStatus(200);
+})
+
+router.delete('/api/todos/:id', async(req, res) => {
+    const { id } = req.params;
+    await deleteTodo(id);
     res.sendStatus(200);
 })
 

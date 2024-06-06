@@ -6,7 +6,15 @@ class TodoService {
     }
 
     async postTodos(todo) {
-        httpService.post('/api/todos', todo);
+        return httpService.post('/api/todos', todo);
+    }
+
+    async putTodo(id, todo) {
+        return httpService.put(`/api/todos/${id}`, todo);
+    }
+    
+    async deleteTodo(id) {
+        return httpService.delete(`/api/todos/${id}`);
     }
 }
 

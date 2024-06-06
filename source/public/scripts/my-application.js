@@ -1,9 +1,9 @@
-export default function initMyApplication(initialModel, rootSelector, App) {
+export default function initMyApplication(model, rootSelector, App) {
     
     const root = document.querySelector(rootSelector)
     const registeredEvents = [];
 
-    const myApplicationContext = { model: { ...initialModel } }; 
+    const myApplicationContext = { model }; 
 
     const render = () => {
 
@@ -26,11 +26,6 @@ export default function initMyApplication(initialModel, rootSelector, App) {
     }
 
     myApplicationContext.render = render;
-
-    myApplicationContext.updateModel = (updated) => {
-        myApplicationContext.model = { ...myApplicationContext.model, ...updated };
-        render();
-    }
 
     return myApplicationContext;
 }

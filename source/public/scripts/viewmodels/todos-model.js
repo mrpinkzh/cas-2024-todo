@@ -1,19 +1,35 @@
-import { CreatingNewTodo, TodosLoaded, TodosNotLoaded } from "./todos-loading-states.js";
+import { CreatingTodo, ShowCreationForm, ShowNewButton, TodoCreated } from "./todos-creation-states.js";
+import { TodosLoaded, TodosNotLoaded } from "./todos-loading-states.js";
 
 export default class TodosModel {
     constructor() {
-        this.state = new TodosNotLoaded()
+        this.todoCreation = new ShowNewButton()
+        this.todoList = new TodosNotLoaded()
+    }
+
+    loadingTodos() {
+        if (this.todoList instanceof TodosLoaded)
+            this.todoList = new TodosNotLoaded(this.todoList.sortBy, this.todoList.filter)
     }
 
     receivedTodos(todos) {
-        this.state = new TodosLoaded(todos);
+        if (this.todoList instanceof TodosNotLoaded)
+        this.todoList = new TodosLoaded(todos, this.todoList.sortBy, this.todoList.filter)
     }
 
-    creatingNewTodo() {
-        if (this.state instanceof TodosLoaded)
-            this.state = new CreatingNewTodo(
-                this.state.todos, 
-                this.state.sortBy, 
-                this.state.filter)
+    showCreationForm() {
+        this.creation = new ShowCreationForm()
+    }
+
+    showNewButton() {
+        this.creation = new ShowNewButton()
+    }
+
+    creatingTodo() {
+        this.creation = new CreatingTodo()
+    }
+
+    todoCreated() {
+        this.creation = new TodoCreated()
     }
 }
