@@ -3,7 +3,7 @@ export default function initMyApplication(model, rootSelector, App) {
     const root = document.querySelector(rootSelector)
     const registeredEvents = [];
 
-    const myApplicationContext = { model }; 
+    const myApplicationContext = { model, render: () => {} }; 
 
     const render = () => {
 

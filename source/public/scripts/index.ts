@@ -4,13 +4,14 @@ import TodoCreation from "./views/TodoCreation.js";
 import TodoList from "./views/TodoList.js";
 import TodosModel from "./viewmodels/todos-model.js"
 import { TodosNotLoaded } from "./viewmodels/todos-loading-states.js"
+import { TodoApplicationContext } from "./controllers/TodoApplicationContext.js";
 
-const App = (applicationContext) => ({
+const App = (applicationContext : TodoApplicationContext) => ({
   events: [
     ...TodoCreation(applicationContext).events,
     ...TodoList(applicationContext).events,
   ],
-  template: (model) => `
+  template: (model : TodosModel) => `
         <div class="main">
             <h1>Note App</h1>
             ${TodoCreation(applicationContext).template(model)}
@@ -22,7 +23,7 @@ const App = (applicationContext) => ({
         </div>`,
 });
 
-const { render, model } = initMyApplication(new TodosModel(), '#todo', App);
+const { render, model } : TodoApplicationContext = initMyApplication(new TodosModel(), '#todo', App);
 render();
 
 todoService.getTodos()

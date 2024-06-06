@@ -1,5 +1,7 @@
+import { TodoApplicationContext } from "../controllers/TodoApplicationContext.js";
 import todoService from "../services/todo-service.js";
 import { ShowCreationForm } from "../viewmodels/todos-creation-states.js";
+import TodosModel from "../viewmodels/todos-model.js";
 
 const validateAndDeconstructForm = (form) => {
     if (form.checkValidity())
@@ -16,7 +18,7 @@ const validateAndDeconstructForm = (form) => {
     return { valid: false };
 }
 
-const TodoCreation = ({model, render}) => ({
+const TodoCreation = ({model, render} : TodoApplicationContext) => ({
     events: [
         {
           selector: "button#btnNew",
@@ -85,9 +87,9 @@ const TodoCreation = ({model, render}) => ({
           }
         }
       ],
-      template: (m) => `
+      template: (model : TodosModel) => `
             <div class="todocreation">
-                ${m.creation instanceof ShowCreationForm
+                ${model.creation instanceof ShowCreationForm
                     ? ` <form>
                             <div class="todo-create-panel">
                                 <div class="form-input">

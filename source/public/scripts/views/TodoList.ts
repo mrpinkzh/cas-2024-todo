@@ -1,9 +1,11 @@
+import { TodoApplicationContext } from "../controllers/TodoApplicationContext.js";
 import todoService from "../services/todo-service.js";
 import { filterPredicate, sortFunction } from "../utils.js";
 import { TodosFiltered } from '../viewmodels/todos-filtering-states.js'
+import TodosModel from "../viewmodels/todos-model.js";
 import { TodosSorted } from '../viewmodels/todos-sorting-states.js'
 
-const TodoList = ({model, render}) => ({
+const TodoList = ({model, render} : TodoApplicationContext) => ({
     events: [
         {
             selector: 'button#btnSort',
@@ -67,33 +69,33 @@ const TodoList = ({model, render}) => ({
             }
         }
     ],
-    template: (m) => `
+    template: (model : TodosModel) => `
         <div class="todolist">
-          ${m.todoList.todos.length > 0
+          ${model.todoList.todos.length > 0
             ? `
                 <div class="todolist-sorting">
-                  ${m.todoList.sortBy instanceof TodosSorted
-                    ? ` <button class="button" id="btnSort">Sort by: ${m.todoList.sortBy.criteria}</button>`
+                  ${model.todoList.sortBy instanceof TodosSorted
+                    ? ` <button class="button" id="btnSort">Sort by: ${model.todoList.sortBy.criteria}</button>`
                     : ` <label for="sortButtonList">Sort by:</label>
                           <div id="sortButtonList" class="button-list">
-                            ${m.todoList.sortBy.criterias.map(criteria => `
+                            ${model.todoList.sortBy.criterias.map(criteria => `
                               <button data-sorting="${criteria}" class="button">${criteria}</button>`)
                               .join('')}
                           </div>`
                         }
-                  ${m.todoList.filter instanceof TodosFiltered
-                    ? ` <button class="button" id="btnFilter">Filter: ${m.todoList.filter.criteria}</button>`
+                  ${model.todoList.filter instanceof TodosFiltered
+                    ? ` <button class="button" id="btnFilter">Filter: ${model.todoList.filter.criteria}</button>`
                     : ` <label>Filter: </label>
                           <div id="filterButtonList" class="button-list">
-                            ${m.todoList.filter.criterias.map(criteria => `
+                            ${model.todoList.filter.criterias.map(criteria => `
                               <button data-filtering="${criteria}" class="button">${criteria}</button>`)
                               .join('')}
                           </div>`
                         }
                 </div>
-                ${m.todoList.todos
-                    .filter(filterPredicate(m.todoList.filter.criteria))
-                    .sort(sortFunction(m.todoList.sortBy.criteria))
+                ${model.todoList.todos
+                    .filter(filterPredicate(model.todoList.filter.criteria))
+                    .sort(sortFunction(model.todoList.sortBy.criteria))
                     .map((todo) => `
                         <div class="todolist-todo ${todo.done ? 'todolist-todo-done' : ''}">
                             <div class="todo-property">
