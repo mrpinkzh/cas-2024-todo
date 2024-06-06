@@ -8,8 +8,6 @@ const initialModel = {
   state: new TodosNotLoadedState(),
 };
 
-const root = document.querySelector("#todo");
-
 const App = (applicationContext) => ({
   events: [
     ...TodoCreation(applicationContext).events,
@@ -27,11 +25,7 @@ const App = (applicationContext) => ({
         </div>`,
 });
 
-const { render, model, updateModel } = initMyApplication(
-  initialModel,
-  root,
-  App
-);
+const { render, model, updateModel } = initMyApplication(initialModel, '#todo', App);
 render();
 
 todoService.getTodos()

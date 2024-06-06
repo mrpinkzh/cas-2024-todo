@@ -6,7 +6,7 @@ const TodoList = ({model, updateModel}) => ({
         {
             selector: 'button#btnSort',
             ev: 'click',
-            handler: (e) => {
+            handler: () => {
                 updateModel({ 
                     state: new TodosLoadedState(
                         model.state.todos,
@@ -86,7 +86,7 @@ const TodoList = ({model, updateModel}) => ({
         <div class="todolist">
           ${m.state.todos.length > 0
             ? `
-                <div class="todolist__sorting">
+                <div class="todolist-sorting">
                   ${m.state.sortBy instanceof TodosSorted
                     ? ` <button class="button" id="btnSort">Sort by: ${m.state.sortBy.criteria}</button>`
                     : ` <label for="sortButtonList">Sort by:</label>
@@ -107,26 +107,26 @@ const TodoList = ({model, updateModel}) => ({
                         }
                 </div>
                 ${sortTodos(filterTodos(m.state.todos, m.state.filter.criteria), m.state.sortBy.criteria).map((todo) => `
-                        <div class="todolist__todo ${todo.done ? 'todolist__todo--done' : ''}">
+                        <div class="todolist-todo ${todo.done ? 'todolist-todo-done' : ''}">
                             <div class="todo-property">
                                 <label for="title">title</label>
-                                <p class="todo-property__value" name="title">${todo.title}</p>
+                                <p class="todo-property-value" name="title">${todo.title}</p>
                             </div>
                             <div class="todo-property">
                                 <label for="importance">importance</label>
-                                <p class="todo-property__value" name="importance">${todo.importance}</p>
+                                <p class="todo-property-value" name="importance">${todo.importance}</p>
                             </div>
                             <div class="todo-property">
                                 <label for="dueDate">due date</label>
-                                <p class="todo-property__value" name="dueDate">
+                                <p class="todo-property-value" name="dueDate">
                                     ${todo.dueDate ? todo.dueDate : 'Someday'}
                                 </p>
                             </div>
                             <div class="todo-property">
                                 <label for="description">description</label>
-                                <p class="todo-property__value" name="description">${todo.description}</p>
+                                <p class="todo-property-value" name="description">${todo.description}</p>
                             </div>
-                            <div class="todo-property--buttons">
+                            <div class="todo-property-buttons">
                                 ${todo.done 
                                     ? `
                                         <span>Done!</span>`
@@ -138,7 +138,7 @@ const TodoList = ({model, updateModel}) => ({
                         </div>`
                     )}`
                 : `
-                    <div class="todolist__empty">
+                    <div class="todolist-empty">
                         <span>Nothing to do. Enjoy your day! :)</span>
                     </div>`
             }

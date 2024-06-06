@@ -72,21 +72,21 @@ const TodoCreation = ({model, updateModel}) => ({
                             <div class="todo-create-panel">
                                 <div class="form-input">
                                     <label for="title">title </label>
-                                    <input class="form-input__textbox" type="text" name="title" required/>
+                                    <input class="textbox" type="text" name="title" required/>
                                 </div>
                                 <div class="form-input">
                                     <label for="importance">importance </label>
-                                    <input class="form-input__textbox" type="number" name="importance" min="1" max="10" value="1" required/>
+                                    <input class="textbox" type="number" name="importance" min="1" max="10" value="1" required/>
                                 </div>
                                 <div class="form-input">
                                     <label for="dueDate">due date </label>
-                                    <input class="form-input__textbox" type="date" name="dueDate" />
+                                    <input class="textbox" type="date" name="dueDate" />
                                 </div>
-                                <div class="todo-create-panel__area form-input">
+                                <div class="todo-create-panel-area form-input">
                                     <label for="description">description </label>
-                                    <textarea class="form-input__textbox" name="description" rows="4"></textarea>
+                                    <textarea class="textbox" name="description" rows="4"></textarea>
                                 </div>
-                                <div class="todo-create-panel__button form-input">
+                                <div class="todo-create-panel-buttons form-input">
                                     <button class="button button-secondary" id="btnCancel">Cancel</button>
                                     <button class="button" id="btnCreate">Create</button>
                                     <button class="button button-secondary" id="btnCreateAndNew">Create & New</button>
