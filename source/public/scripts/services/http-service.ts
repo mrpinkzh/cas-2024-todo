@@ -4,7 +4,7 @@ class HttpService {
         return response.json();
     }
 
-    async post(url, data) {
+    async post(url, data): Promise<number> {
         const response = await fetch(url, this.#requestInit('POST', data))
         return response.status;
     }

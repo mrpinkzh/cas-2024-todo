@@ -13,7 +13,7 @@ router.get('/api/todos', async (_req, res) => {
 
 router.post('/api/todos', async (req, res) => {
     await insertTodo(req.body);
-    res.sendStatus(200);
+    res.sendStatus(201);
 })
 
 router.put('/api/todos/:id', async (req, res) => {

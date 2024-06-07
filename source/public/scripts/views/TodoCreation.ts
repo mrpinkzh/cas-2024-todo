@@ -1,6 +1,6 @@
 import { TodoApplicationContext } from "../controllers/TodoApplicationContext.js";
 import todoService from "../services/todo-service.js";
-import { CreatingTodo, ShowCreateButton, ShowCreationForm, ShowNewButton } from "../viewmodels/todos-creation-states.js";
+import { CreatingTodo, ShowCreateButton, ShowCreationForm, ShowNewButton, TodoCreated } from "../viewmodels/todos-creation-states.js";
 import TodosModel from "../viewmodels/todos-model.js";
 
 const validateAndDeconstructForm = (form) => {
@@ -39,15 +39,17 @@ const TodoCreation = ({model, render} : TodoApplicationContext) => ({
                 if (valid) {
                     model.creation.creatingTodo(todo.title);
                     render()
-                    await todoService.postTodos(todo)
-                    model.todoCreated()
-                    render()
-                    model.loadingTodos()
-                    render()
-                    const todos = await todoService.getTodos()
-                    model.receivedTodos(todos)
-                    model.showNewButton();
-                    render()
+                    const postStatus = await todoService.postTodos(todo)
+                    if (postStatus === 201){
+                        model.creation.todoCreated(todo.title)
+                        render()
+                        model.loadingTodos()
+                        render()
+                        const todos = await todoService.getTodos()
+                        model.receivedTodos(todos)
+                        model.showNewButton();
+                        render()
+                    }
                 }
                 else 
                     form.reportValidity();
@@ -65,15 +67,17 @@ const TodoCreation = ({model, render} : TodoApplicationContext) => ({
                 if (valid) {
                     model.creation.creatingTodo(todo.title);
                     render()
-                    await todoService.postTodos(todo)
-                    model.todoCreated()
-                    render()
-                    model.loadingTodos()
-                    render()
-                    const todos = await todoService.getTodos()
-                    model.receivedTodos(todos)
-                    model.showCreationForm()
-                    render()
+                    const postStatus = await todoService.postTodos(todo)
+                    if (postStatus === 201){
+                        model.creation.todoCreated(todo.title)
+                        render()
+                        model.loadingTodos()
+                        render()
+                        const todos = await todoService.getTodos()
+                        model.receivedTodos(todos)
+                        model.showCreationForm()
+                        render()
+                    }
                 }
                 else 
                     form.reportValidity();
@@ -122,14 +126,22 @@ const TodoCreation = ({model, render} : TodoApplicationContext) => ({
                       </div>
                     </form>
                   </div>` 
-              : model.creation.buttonState instanceof CreatingTodo
-                ? ` <div class="todo-create-panel border">
+              : 
+              model.creation.buttonState instanceof CreatingTodo
+              ? ` <div class="todo-create-panel border">
                         <div class="todo-create-pending border-focus">
                         <p>Creating Todo '${model.creation.buttonState.title}' ...</p>
                         </div>
                     </div>`
-                : ``
-            : ``
+              : 
+              model.creation.buttonState instanceof TodoCreated
+              ? ` <div class="todo-create-panel border">
+                    <div class="todo-create-pending border-focus">
+                      <p>Created Todo '${model.creation.buttonState.title}' ...</p>
+                    </div>
+                  </div>`
+              : ''
+            : ''
         }
        </div>`})
 

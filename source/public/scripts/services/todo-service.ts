@@ -5,7 +5,7 @@ class TodoService {
         return httpService.get('/api/todos');
     }
 
-    async postTodos(todo) {
+    async postTodos(todo): Promise<number> {
         return httpService.post('/api/todos', todo);
     }
 

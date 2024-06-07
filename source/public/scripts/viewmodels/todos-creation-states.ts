@@ -1,9 +1,9 @@
-export interface TodoCreationState { };
+export interface TodoCreationPanelState { };
 
-export class ShowNewButton implements TodoCreationState { }
+export class ShowNewButton implements TodoCreationPanelState { }
 
-export class ShowCreationForm implements TodoCreationState {
-    buttonState: CreationButtonState;
+export class ShowCreationForm implements TodoCreationPanelState {
+    buttonState: TodoCreationState;
     constructor(buttonState = new ShowCreateButton()){
         this.buttonState = buttonState;
     }
@@ -11,17 +11,26 @@ export class ShowCreationForm implements TodoCreationState {
     creatingTodo(title) {
         this.buttonState = new CreatingTodo(title)
     }
+
+    todoCreated(title) {
+        this.buttonState = new TodoCreated(title)
+    }
  }
 
-export interface CreationButtonState {}
+interface TodoCreationState {}
 
-export class ShowCreateButton implements CreationButtonState { }
+export class ShowCreateButton implements TodoCreationState { }
 
-export class CreatingTodo implements CreationButtonState {
+export class CreatingTodo implements TodoCreationState {
     title: string
     constructor(title){
         this.title = title;
     }
  }
 
-export class TodoCreated implements TodoCreationState { }
+export class TodoCreated implements TodoCreationPanelState {
+    title: string
+    constructor(title){
+        this.title = title;
+    }
+ }
