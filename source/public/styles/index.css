@@ -18,6 +18,16 @@
     color: white;
 }
 
+.button:disabled {
+    border-color: lightgray;
+    color: lightgray;
+}
+
+.button:hover:disabled {
+    background: lightgray;
+    color: white;
+}
+
 .button-secondary {
     border-color: slategray;
 }
@@ -42,6 +52,21 @@
     margin-left: 0.2em;
 }
 
+.border {
+    border: 0.1em solid darkgray;
+    border-radius: 0.2em;
+}
+
+.border-focus {
+    border: 0.1em solid black;
+    border-radius: 0.2em;
+}
+
+.border-done {
+    border: 0.1em solid slategray;
+    border-radius: 0.2em;
+}
+
 #todo {
     display: grid;
     grid-template-columns: auto 60em auto;
@@ -61,14 +86,18 @@
 }
 
 .todo-create-panel {
-    border: 0.1em solid black;
-    border-radius: 0.2em;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-row-gap: 0.4em;
     margin: 0.2em;
     padding: 1em;
     height: 15em;
+    display: flex;
+    justify-content: center;
+}
+
+.todo-create-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-row-gap: 0.4em;
+    flex: 1;
 }
 
 .todo-create-panel-area {
@@ -79,6 +108,12 @@
 .todo-create-panel-buttons {
     grid-column: 3;
     justify-content: end;
+}
+
+.todo-create-pending {
+    justify-self: center;
+    align-self: center;
+    padding: 1em 2em;
 }
 
 .todolist-sorting {

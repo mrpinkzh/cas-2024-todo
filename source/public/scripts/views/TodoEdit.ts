@@ -14,7 +14,7 @@ export const validateAndDeconstructForm = (form) => {
 
 const TodoEdit = (todo:any) => (`
     <form>
-        <div class="todo-create-panel">
+        <div class="todo-create-panel border">
             <div class="form-input">
                 <label for="title">title </label>
                 <input class="textbox" type="text" name="title" value="${todo.title}" required/>
@@ -29,9 +29,7 @@ const TodoEdit = (todo:any) => (`
             </div>
             <div class="todo-create-panel-area form-input">
                 <label for="description">description </label>
-                <textarea class="textbox" name="description" rows="4">
-                    ${todo.description}
-                </textarea>
+                <textarea class="textbox" name="description" rows="4">${todo.description}</textarea>
             </div>
             <div class="todo-create-panel-buttons form-input">
                 <button class="button button-secondary" id="btnCancelUpdate">Cancel</button>

@@ -28,10 +28,6 @@ export default class TodosModel {
         this.creation = new ShowNewButton()
     }
 
-    creatingTodo() {
-        this.creation = new CreatingTodo()
-    }
-
     todoCreated() {
         this.creation = new TodoCreated()
     }
