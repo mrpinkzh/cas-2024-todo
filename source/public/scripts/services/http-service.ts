@@ -14,7 +14,7 @@ class HttpService {
         return response.status;
     }
 
-    async delete(url) {
+    async delete(url): Promise<number> {
         const response = await fetch(url, this.#requestInit('DELETE'))
         return response.status;
     }

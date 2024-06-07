@@ -13,7 +13,7 @@ class TodoService {
         return httpService.put(`/api/todos/${id}`, todo);
     }
     
-    async deleteTodo(id) {
+    async deleteTodo(id): Promise<number> {
         return httpService.delete(`/api/todos/${id}`);
     }
 }

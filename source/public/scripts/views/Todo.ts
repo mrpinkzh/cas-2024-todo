@@ -1,4 +1,6 @@
-const Todo = (todo:any) => (`
+import { TodoModel } from "../viewmodels/todo-model";
+
+const Todo = (todo:TodoModel) => (`
     <div class="todolist-todo ${todo.done ? 'todolist-todo-done' : ''}">
         <div class="todo-property">
             <label for="title">title</label>
@@ -19,16 +21,16 @@ const Todo = (todo:any) => (`
             <p class="todo-property-value" name="description">${todo.description}</p>
         </div>
         <div class="todo-property-buttons">
-            <button class="button button-secondary" id="btnDelete" data-id="${todo._id}">
+            <button class="button button-secondary" id="btnDelete" data-id="${todo.id}">
                 Delete
             </button>
-            <button class="button button-secondary btnEdit" data-id=${todo._id}>
+            <button class="button button-secondary btnEdit" data-id=${todo.id}>
                 Edit
             </button>
             ${todo.done 
                 ? `<span>Done!</span>`
                 : `
-                    <button class="button" id="btnDone" data-id="${todo._id}">
+                    <button class="button" id="btnDone" data-id="${todo.id}">
                         Done
                     </button>`}
         </div>

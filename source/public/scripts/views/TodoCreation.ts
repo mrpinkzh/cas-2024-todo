@@ -129,14 +129,14 @@ const TodoCreation = ({model, render} : TodoApplicationContext) => ({
               : 
               model.creation.buttonState instanceof CreatingTodo
               ? ` <div class="todo-create-panel border">
-                        <div class="todo-create-pending border-focus">
+                        <div class="temporary-message border-focus">
                         <p>Creating Todo '${model.creation.buttonState.title}' ...</p>
                         </div>
                     </div>`
               : 
               model.creation.buttonState instanceof TodoCreated
               ? ` <div class="todo-create-panel border">
-                    <div class="todo-create-pending border-focus">
+                    <div class="temporary-message border-focus">
                       <p>Created Todo '${model.creation.buttonState.title}' ...</p>
                     </div>
                   </div>`
