@@ -1,6 +1,8 @@
+import { ItemActionState } from "./todos-loading-states";
+
 export class TodoModel {
     todo: any
-    constructor(todo){
+    constructor(todo, public itemAction: ItemActionState) {
         this.todo = todo;
     }
 

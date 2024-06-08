@@ -9,25 +9,22 @@ export abstract class LoadingState {
         this.sortBy = sortBy;
         this.filter = filter;
     }
- }
+}
 
 export class TodosNotLoaded extends LoadingState {
     constructor(sortBy = new TodosSorted(), filter = new TodosFiltered()) {
         super(sortBy, filter)
     }
- }
+}
 
 export class TodosLoaded extends LoadingState {
-    todos: any[];
-    editMode: EditModeState;
     constructor(
-        todos = [], 
-        sortingState = new TodosSorted(), 
-        filteringState = new TodosFiltered(),
-        editMode = new NoEditing()) {
-            super(sortingState, filteringState)
-            this.todos = todos;
-            this.editMode = editMode;
+        public todos = [],
+        sortingState: SortingState = new TodosSorted(),
+        filteringState: FilteringState = new TodosFiltered(),
+        public itemAction: ItemActionState = new NoItemAction()) {
+
+        super(sortingState, filteringState)
     }
 
     showSortCriterias() {
@@ -50,25 +47,29 @@ export class TodosLoaded extends LoadingState {
             this.filter = new TodosFiltered(criteria)
     }
 
-    showEditMode(todoId) {
-        if (this.editMode instanceof NoEditing)
-            this.editMode = new ShowEditMode(todoId);
+    showEditMode(todoId: string): void {
+        if (this.itemAction instanceof NoItemAction)
+            this.itemAction = new ShowEditMode(todoId);
     }
 
-    showReadOnlyMode() {
-        if (this.editMode instanceof ShowEditMode)
-            this.editMode = new NoEditing();
+    showReadOnlyMode(): void {
+        if (this.itemAction instanceof ShowEditMode)
+            this.itemAction = new NoItemAction();
     }
-}
 
-export abstract class EditModeState { }
-
-export class NoEditing extends EditModeState {}
-
-export class ShowEditMode extends EditModeState {
-    todoId: string;
-    constructor(todoId) {
-        super();
-        this.todoId = todoId;
+    deletingTodo(todoId): void {
+        this.itemAction = new ShowDeleting(todoId);
     }
 }
+
+export abstract class ItemActionState {
+}
+
+export class NoItemAction extends ItemActionState { }
+
+export abstract class ItemActionWithTodoId {
+    constructor(public todoId: string) { }
+}
+export class ShowEditMode extends ItemActionWithTodoId { }
+
+export class ShowDeleting extends ItemActionWithTodoId { }

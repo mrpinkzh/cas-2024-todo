@@ -2,7 +2,7 @@ import { TodoApplicationContext } from "../controllers/TodoApplicationContext.js
 import todoService from "../services/todo-service.js";
 import { filterPredicate, sortFunction } from "../utils.js";
 import { TodosFiltered, TodosFiltering } from '../viewmodels/todos-filtering-states.js'
-import { ShowEditMode, TodosLoaded } from "../viewmodels/todos-loading-states.js";
+import { ItemActionWithTodoId, NoItemAction, ShowEditMode, TodosLoaded } from "../viewmodels/todos-loading-states.js";
 import TodosModel from "../viewmodels/todos-model.js";
 import { TodosSorted, TodosSorting } from '../viewmodels/todos-sorting-states.js'
 import Todo from "./Todo.js";
@@ -10,8 +10,8 @@ import TodoEdit, { validateAndDeconstructForm } from "./TodoEdit.js";
 import { TodoApplicationView } from "./TodoApplicationView.js";
 import { TodoModel } from "../viewmodels/todo-model.js";
 
-const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView => {
-    
+const TodoList = ({ model, render }: TodoApplicationContext): TodoApplicationView => {
+
     const handleButtonDone = async (e) => {
         if (model.todoList instanceof TodosLoaded) {
             const todoId = e.target.dataset.id;
@@ -28,12 +28,16 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
     const handleButtonDelete = async (e) => {
         if (model.todoList instanceof TodosLoaded) {
             const todoId = e.target.dataset.id;
+            model.todoList.deletingTodo(todoId)
+            render();
             const deleteStatus = await todoService.deleteTodo(todoId);
-            model.loadingTodos();
-            render();
-            const todos = await todoService.getTodos();
-            model.receivedTodos(todos);
-            render();
+            if (deleteStatus === 200) {
+                model.loadingTodos();
+                render();
+                const todos = await todoService.getTodos();
+                model.receivedTodos(todos);
+                render();
+            }
         }
     }
 
@@ -45,20 +49,20 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
         }
     }
 
-    const handleButtonCancelUpdate = async() => {
+    const handleButtonCancelUpdate = async () => {
         if (model.todoList instanceof TodosLoaded) {
             model.todoList.showReadOnlyMode();
             render();
         }
     }
 
-    const handleButtonUpdate = async(e) => {
+    const handleButtonUpdate = async (e) => {
         if (model.todoList instanceof TodosLoaded) {
             const form = e.target.closest("form");
 
             const { valid, todo } = validateAndDeconstructForm(form);
 
-            if (valid){
+            if (valid) {
                 const todoId = e.target.dataset.id;
                 await todoService.putTodo(todoId, { ...todo });
                 model.loadingTodos();
@@ -67,7 +71,7 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
                 model.receivedTodos(todos);
                 render();
             }
-            else 
+            else
                 form.reportValidity();
         }
     }
@@ -145,35 +149,41 @@ const TodoList = ({model, render} : TodoApplicationContext) :TodoApplicationView
                     ${model.todoList.sortBy instanceof TodosSorted
                     ? ` <button class="button" id="btnSort">Sort by: ${model.todoList.sortBy.criteria}</button>`
                     : model.todoList.sortBy instanceof TodosSorting
-                      ? ` <label for="sortButtonList">Sort by:</label>
-                          <div id="sortButtonList" class="button-list">
-                          ${model.todoList.sortBy.criterias.map(criteria => `
-                              <button data-sorting="${criteria}" class="button">${criteria}</button>`)
+                    ? ` <label for="sortButtonList">Sort by:</label>
+                      <div id="sortButtonList" class="button-list">
+                      ${model.todoList.sortBy.criterias.map(criteria => `
+                          <button data-sorting="${criteria}" class="button">${criteria}</button>`)
                             .join('')}
-                          </div>`
-                      : ``}
+                      </div>`
+                    : ``}
                     ${model.todoList.filter instanceof TodosFiltered
                     ? ` <button class="button" id="btnFilter">Filter: ${model.todoList.filter.criteria}</button>`
                     : model.todoList.filter instanceof TodosFiltering
-                      ? ` <label>Filter: </label>
-                          <div id="filterButtonList" class="button-list">
-                          ${model.todoList.filter.criterias.map(criteria => `
-                              <button data-filtering="${criteria}" class="button">${criteria}</button>`)
+                    ? ` <label>Filter: </label>
+                      <div id="filterButtonList" class="button-list">
+                      ${model.todoList.filter.criterias.map(criteria => `
+                          <button data-filtering="${criteria}" class="button">${criteria}</button>`)
                             .join('')}
-                          </div>`
-                      : ``}
+                      </div>`
+                    : ``}
                   </div>
                   ${model.todoList.todos
-                      .filter(filterPredicate(model.todoList.filter.criteria))
-                      .sort(sortFunction(model.todoList.sortBy.criteria))
-                      .map((todo) => {
-                              if (model.todoList instanceof TodosLoaded)
-                                  if (model.todoList.editMode instanceof ShowEditMode)
-                                      if (model.todoList.editMode.todoId === todo._id)
-                                          return TodoEdit(todo);
-                              return Todo(new TodoModel(todo));
-                          })}
-                  </div>`
+                        .filter(filterPredicate(model.todoList.filter.criteria))
+                        .sort(sortFunction(model.todoList.sortBy.criteria))
+                        .map((todo) => {
+                            if (model.todoList instanceof TodosLoaded) {
+                                if (model.todoList.itemAction instanceof ItemActionWithTodoId)
+                                    if (model.todoList.itemAction.todoId === todo._id) {
+                                        if (model.todoList.itemAction instanceof ShowEditMode)
+                                            return TodoEdit(todo);
+                                        else
+                                            return Todo(new TodoModel(todo, model.todoList.itemAction))
+                                    }
+                                return Todo(new TodoModel(todo, new NoItemAction()))
+                            }
+                            return ''
+                        })}
+                </div>`
           : ` <div class="temporary-message border">
                 <p>Loading...</p>
               </div>`}
