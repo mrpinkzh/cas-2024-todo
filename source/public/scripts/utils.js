@@ -5,6 +5,8 @@ export const SORT_CRITERIAS = {
   LEAST_IMPORTANT: 'least important',
   NEXT_DUE: 'next due',
   LAST_DUE: 'last due',
+  NEWEST: 'newest',
+  OLDEST: 'oldest',
   all() { 
     return [ 
       this.TITLE_ASC, 
@@ -12,7 +14,9 @@ export const SORT_CRITERIAS = {
       this.MOST_IMPORTANT,
       this.LEAST_IMPORTANT,
       this.NEXT_DUE,
-      this.LAST_DUE 
+      this.LAST_DUE,
+      this.NEWEST,
+      this.OLDEST 
     ];
   }
 }
@@ -31,6 +35,10 @@ export const sortFunction = (criteria) => {
       return (todoA, todoB) => Date.parse(todoA.dueDate) - Date.parse(todoB.dueDate);
     case SORT_CRITERIAS.LAST_DUE:
       return (todoA, todoB) => Date.parse(todoB.dueDate) - Date.parse(todoA.dueDate);
+    case SORT_CRITERIAS.NEWEST:
+      return (todoA, todoB) => Date.parse(todoA.creationDate) - Date.parse(todoB.creationDate);
+    case SORT_CRITERIAS.OLDEST:
+        return (todoA, todoB) => Date.parse(todoB.creationDate) - Date.parse(todoA.creationDate);
     default:
       return sortFunction(SORT_CRITERIAS.TITLE_ASC);
   }

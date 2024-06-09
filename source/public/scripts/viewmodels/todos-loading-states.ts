@@ -1,6 +1,7 @@
 import { SortingState, TodosSorted, TodosSorting } from "./todos-sorting-states.js";
 import { FilteringState, TodosFiltered, TodosFiltering } from "./todos-filtering-states.js";
 import { Show, TodoState, ShowEditing, ShowDeleting, ShowUpdating } from "./todo-model.js";
+import { Todo } from "../services/todo-service.js";
 
 export abstract class LoadingState {
     sortBy: SortingState;
@@ -20,7 +21,7 @@ export class TodosNotLoaded extends LoadingState {
 
 export class TodosLoaded extends LoadingState {
     constructor(
-        public todos = [],
+        public todos: Todo[] = [],
         sortingState: SortingState = new TodosSorted(),
         filteringState: FilteringState = new TodosFiltered(),
         public itemAction: ItemActionState = new NoItemAction()) {
@@ -28,15 +29,9 @@ export class TodosLoaded extends LoadingState {
         super(sortingState, filteringState)
     }
 
-    showSortCriterias() {
-        if (this.sortBy instanceof TodosSorted)
-            this.sortBy = new TodosSorting(this.sortBy.criteria)
-    }
+    showSortCriterias() { this.sortBy = new TodosSorting(this.sortBy.criteria) }
 
-    sortWith(criteria) {
-        if (this.sortBy instanceof TodosSorting)
-            this.sortBy = new TodosSorted(criteria)
-    }
+    sortWith(criteria: string) { this.sortBy = new TodosSorted(criteria) }
 
     showFilterCriterias() {
         if (this.filter instanceof TodosFiltered)

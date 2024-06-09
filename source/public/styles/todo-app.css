@@ -48,6 +48,12 @@
     margin: 0.2em;
 }
 
+.todolist-sorting-expanded {
+    display: grid;
+    grid-template-columns: 7em auto;
+    align-items: baseline;
+}
+
 .todolist-todo {
     border: 0.1em solid darkgray;
     border-radius: 0.2em;

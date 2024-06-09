@@ -16,7 +16,8 @@ export const validateAndDeconstructForm = (form): TodoFormResult => {
         importance: form.querySelector('input[name="importance"]').value,
         dueDate: form.querySelector('input[name="dueDate"]').value,
         description: form.querySelector('textarea[name="description"]').value,
-        done: form.querySelector('input[name="done"]').value === "true"
+        done: form.querySelector('input[name="done"]').value === "true",
+        creationDate: form.querySelector('input[name="creationDate"]').value
       }
     }
   return { valid: false, todo: null };
@@ -34,6 +35,7 @@ const Todo = (todo: TodoModel) => (`
           <form class="todo-create-form">
             <input type="hidden" name="id" value="${todo.id}" />
             <input type="hidden" name="done" value="${todo.done}" />
+            <input type="hidden" name="creationDate" value="${todo.creationDate}" />
             <div class="form-input">
               <label for="title">title </label>
               <input class="textbox" type="text" name="title" value="${todo.title}" required/>

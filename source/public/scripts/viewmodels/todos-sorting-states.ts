@@ -1,10 +1,7 @@
 import { SORT_CRITERIAS } from "../utils.js"
 
 export abstract class SortingState {
-    criteria: string;
-    constructor(criteria) {
-        this.criteria = criteria;
-    }
+    constructor(public criteria: string) { }
 }
 
 export class TodosSorted extends SortingState {
@@ -14,8 +11,8 @@ export class TodosSorted extends SortingState {
 }
 
 export class TodosSorting extends SortingState {
-    criterias : string[];
-    constructor(currentCriteria) {
+    criterias: string[];
+    constructor(currentCriteria: string) {
         super(currentCriteria)
         this.criterias = SORT_CRITERIAS.all()
     }

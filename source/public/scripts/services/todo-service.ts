@@ -19,12 +19,13 @@ class TodoService {
 }
 
 export interface Todo {
-    _id: string;
-    title: string;
-    importance: number;
-    dueDate: Date;
-    description: string;
-    done: boolean;
+    _id: string
+    title: string
+    importance: number
+    dueDate: Date
+    description: string
+    done: boolean
+    creationDate: Date
 }
 
 const todoService = new TodoService();

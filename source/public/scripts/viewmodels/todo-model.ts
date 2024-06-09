@@ -1,10 +1,7 @@
-import { ItemActionState } from "./todos-loading-states";
+import { Todo } from "../services/todo-service.js";
 
 export class TodoModel {
-    todo: any
-    constructor(todo, public todoState: TodoState) {
-        this.todo = todo;
-    }
+    constructor(private todo: Todo, public todoState: TodoState) { }
 
     get id() {
         return this.todo._id;
@@ -28,6 +25,10 @@ export class TodoModel {
 
     get description() {
         return this.todo.description;
+    }
+
+    get creationDate() {
+        return this.todo.creationDate
     }
 }
 

@@ -32,6 +32,22 @@ const todolistController = ({ model, render }: TodoApplicationContext) => ({
         }
     },
 
+    async setToDone(todoId: string): Promise<void> {
+        if (model.todoList instanceof TodosLoaded) {
+            const todo = model.todoList.todos.find(x => x._id === todoId);
+            model.todoList.showUpdating(todoId);
+            render();
+            const putResult = await todoService.putTodo(todoId, { ...todo, done: true });
+            if (putResult === 200) {
+                model.loadingTodos();
+                render();
+                const todos = await todoService.getTodos();
+                model.receivedTodos(todos);
+                render();
+            }
+        }
+    },
+
     async deleteTodo(todoId: string): Promise<void> {
         if (model.todoList instanceof TodosLoaded) {
             model.todoList.deletingTodo(todoId)

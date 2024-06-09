@@ -6,7 +6,7 @@ export const getTodos = async () => db.find()
 
 export const getTodo = async id => db.findOne({_id: id})
 
-export const insertTodo = (todo) => db.insert(todo)
+export const insertTodo = (todo) => db.insert({...todo, creationDate: new Date()})
 
 export const updateTodo = (id, update) => db.update({_id: id}, {$set: update})
 
