@@ -1,5 +1,6 @@
 import { SortingState, TodosSorted, TodosSorting } from "./todos-sorting-states.js";
 import { FilteringState, TodosFiltered, TodosFiltering } from "./todos-filtering-states.js";
+import { Show, TodoState, ShowEditing, ShowDeleting } from "./todo-model.js";
 
 export abstract class LoadingState {
     sortBy: SortingState;
@@ -49,27 +50,47 @@ export class TodosLoaded extends LoadingState {
 
     showEditMode(todoId: string): void {
         if (this.itemAction instanceof NoItemAction)
-            this.itemAction = new ShowEditMode(todoId);
+            this.itemAction = new Editing(todoId);
     }
 
     showReadOnlyMode(): void {
-        if (this.itemAction instanceof ShowEditMode)
+        if (this.itemAction instanceof Editing)
             this.itemAction = new NoItemAction();
     }
 
     deletingTodo(todoId): void {
-        this.itemAction = new ShowDeleting(todoId);
+        this.itemAction = new Deleting(todoId);
     }
 }
 
 export abstract class ItemActionState {
+    abstract evaluateTodoStateFor(tododId: string): TodoState;
 }
 
-export class NoItemAction extends ItemActionState { }
-
-export abstract class ItemActionWithTodoId {
-    constructor(public todoId: string) { }
+export class NoItemAction extends ItemActionState {
+    evaluateTodoStateFor(tododId: string) {
+        return new Show(true);
+    }
 }
-export class ShowEditMode extends ItemActionWithTodoId { }
 
-export class ShowDeleting extends ItemActionWithTodoId { }
+export abstract class ItemActionWithTodoId extends ItemActionState {
+    constructor(public todoId: string) { super() }
+
+    abstract evaluateTodoStateFor(tododId: string): TodoState;
+}
+
+export class Editing extends ItemActionWithTodoId {
+    evaluateTodoStateFor(tododId: string): TodoState {
+        if (this.todoId === tododId)
+            return new ShowEditing();
+        return new Show(false);
+    }
+}
+
+export class Deleting extends ItemActionWithTodoId {
+    evaluateTodoStateFor(tododId: string): TodoState {
+        if (this.todoId === tododId)
+            return new ShowDeleting();
+        return new Show(false);
+    }
+}

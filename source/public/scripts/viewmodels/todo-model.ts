@@ -2,7 +2,7 @@ import { ItemActionState } from "./todos-loading-states";
 
 export class TodoModel {
     todo: any
-    constructor(todo, public itemAction: ItemActionState) {
+    constructor(todo, public todoState: TodoState) {
         this.todo = todo;
     }
 
@@ -30,3 +30,13 @@ export class TodoModel {
         return this.todo.description;
     }
 }
+
+export class TodoState { }
+
+export class Show extends TodoState {
+    constructor(public allowAction: boolean) { super() }
+}
+
+export class ShowEditing extends TodoState { }
+
+export class ShowDeleting extends TodoState { }
