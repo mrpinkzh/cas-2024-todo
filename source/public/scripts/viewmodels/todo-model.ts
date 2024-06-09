@@ -39,4 +39,6 @@ export class Show extends TodoState {
 
 export class ShowEditing extends TodoState { }
 
+export class ShowUpdating extends TodoState { }
+
 export class ShowDeleting extends TodoState { }

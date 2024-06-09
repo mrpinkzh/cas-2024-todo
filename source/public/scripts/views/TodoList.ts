@@ -8,8 +8,10 @@ import { TodosSorted, TodosSorting } from '../viewmodels/todos-sorting-states.js
 import Todo, { validateAndDeconstructForm } from "./Todo.js";
 import { TodoApplicationView } from "./TodoApplicationView.js";
 import { TodoModel } from "../viewmodels/todo-model.js";
+import todolistController from "../controllers/todolist-controller.js";
 
 const TodoList = ({ model, render }: TodoApplicationContext): TodoApplicationView => {
+    const controller = todolistController({ model, render })
 
     const handleButtonDone = async (e) => {
         if (model.todoList instanceof TodosLoaded) {
@@ -24,55 +26,17 @@ const TodoList = ({ model, render }: TodoApplicationContext): TodoApplicationVie
         }
     }
 
-    const handleButtonDelete = async (e) => {
-        if (model.todoList instanceof TodosLoaded) {
-            const todoId = e.target.dataset.id;
-            model.todoList.deletingTodo(todoId)
-            render();
-            const deleteStatus = await todoService.deleteTodo(todoId);
-            if (deleteStatus === 200) {
-                model.loadingTodos();
-                render();
-                const todos = await todoService.getTodos();
-                model.receivedTodos(todos);
-                render();
-            }
-        }
-    }
-
-    const handleButtonEdit = async (e) => {
-        if (model.todoList instanceof TodosLoaded) {
-            const todoId = e.target.dataset.id;
-            model.todoList.showEditMode(todoId);
-            render();
-        }
-    }
-
-    const handleButtonCancelUpdate = async () => {
-        if (model.todoList instanceof TodosLoaded) {
-            model.todoList.showReadOnlyMode();
-            render();
-        }
-    }
-
     const handleButtonUpdate = async (e) => {
-        if (model.todoList instanceof TodosLoaded) {
-            const form = e.target.closest("form");
+        const form = e.target.closest("form");
 
-            const { valid, todo } = validateAndDeconstructForm(form);
+        const { valid, todo } = validateAndDeconstructForm(form);
 
-            if (valid) {
-                const todoId = e.target.dataset.id;
-                await todoService.putTodo(todoId, { ...todo });
-                model.loadingTodos();
-                render();
-                const todos = await todoService.getTodos();
-                model.receivedTodos(todos);
-                render();
-            }
-            else
-                form.reportValidity();
+        if (valid) {
+            const todoId = e.target.dataset.id;
+            await controller.updateTodo(todoId, todo);
         }
+        else
+            form.reportValidity();
     }
 
     return ({
@@ -123,14 +87,16 @@ const TodoList = ({ model, render }: TodoApplicationContext): TodoApplicationVie
                 selector: 'div.todolist',
                 ev: 'click',
                 handler: async (e) => {
+                    e.preventDefault();
+                    const todoId = e.target.dataset.id;
                     if (e.target.matches('button#btnDone'))
                         await handleButtonDone(e)
                     if (e.target.matches('button#btnDelete'))
-                        await handleButtonDelete(e)
+                        await controller.deleteTodo(todoId)
                     if (e.target.matches('button.btnEdit'))
-                        await handleButtonEdit(e)
+                        controller.showEditMode(todoId);
                     if (e.target.matches('button#btnCancelUpdate'))
-                        await handleButtonCancelUpdate()
+                        controller.cancelEdit();
                     if (e.target.matches('button#btnUpdate'))
                         await handleButtonUpdate(e)
                 }

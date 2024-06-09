@@ -9,7 +9,7 @@ class HttpService {
         return response.status;
     }
 
-    async put(url, data) {
+    async put(url, data): Promise<number> {
         const response = await fetch(url, this.#requestInit('PUT', data))
         return response.status;
     }
@@ -24,7 +24,7 @@ class HttpService {
     }
 
     #fetchHeaders() {
-        return new Headers({'content-type': 'application/json'});
+        return new Headers({ 'content-type': 'application/json' });
     }
 }
 

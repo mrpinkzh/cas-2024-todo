@@ -1,6 +1,6 @@
 import { SortingState, TodosSorted, TodosSorting } from "./todos-sorting-states.js";
 import { FilteringState, TodosFiltered, TodosFiltering } from "./todos-filtering-states.js";
-import { Show, TodoState, ShowEditing, ShowDeleting } from "./todo-model.js";
+import { Show, TodoState, ShowEditing, ShowDeleting, ShowUpdating } from "./todo-model.js";
 
 export abstract class LoadingState {
     sortBy: SortingState;
@@ -49,13 +49,15 @@ export class TodosLoaded extends LoadingState {
     }
 
     showEditMode(todoId: string): void {
-        if (this.itemAction instanceof NoItemAction)
-            this.itemAction = new Editing(todoId);
+        this.itemAction = new Editing(todoId);
+    }
+
+    showUpdating(todoId: string): void {
+        this.itemAction = new Updating(todoId)
     }
 
     showReadOnlyMode(): void {
-        if (this.itemAction instanceof Editing)
-            this.itemAction = new NoItemAction();
+        this.itemAction = new NoItemAction();
     }
 
     deletingTodo(todoId): void {
@@ -83,6 +85,14 @@ export class Editing extends ItemActionWithTodoId {
     evaluateTodoStateFor(tododId: string): TodoState {
         if (this.todoId === tododId)
             return new ShowEditing();
+        return new Show(false);
+    }
+}
+
+export class Updating extends ItemActionWithTodoId {
+    evaluateTodoStateFor(tododId: string): TodoState {
+        if (this.todoId === tododId)
+            return new ShowUpdating();
         return new Show(false);
     }
 }
