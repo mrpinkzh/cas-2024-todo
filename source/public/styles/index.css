@@ -3,10 +3,61 @@
     font-family: "Cambria Math", serif;
 }
 
+:root {
+    --base-background: white;
+    --base-color: black;
+    --secondary-color: darkgray;
+}
+
+#app {
+    background: var(--base-background);
+    color: var(--base-color);
+}
+
+.layout {
+    background: var(--base-background);
+    color: var(--base-color);
+    display: grid;
+    grid-template-columns: auto 60em auto;
+    grid-template-rows: 1fr auto 1fr;
+}
+
+.main {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-light {
+    --base-background: white;
+    --base-color: black;
+    --secondary-color: darkgray;
+}
+
+.theme-dark {
+    --base-background: black;
+    --base-color: white;
+    --secondary-color: darkgray;
+}
+
+.theme-navy {
+    --base-background: navy;
+    --base-color: white;
+    --secondary-color: lightblue;
+}
+
+.theme-pink {
+    --base-background: pink;
+    --base-color: purple;
+    --secondary-color: plum;
+}
+
 .button {
-    background: white;
-    border: 0.2em solid black;
+    background: var(--base-background);
+    border: 0.2em solid var(--base-color);
     border-radius: 0.2em;
+    color: var(--base-color);
     font-size: 1em;
     padding: 0.4em 0.6em 0.2em;
     margin-right: 0.3em;
@@ -14,8 +65,8 @@
 }
 
 .button:hover {
-    background: black;
-    color: white;
+    background: var(--base-color);
+    color: var(--base-background);
 }
 
 .button:disabled {
@@ -25,16 +76,16 @@
 
 .button:hover:disabled {
     background: lightgray;
-    color: white;
+    color: var(--base-background);
 }
 
 .button-secondary {
-    border-color: slategray;
+    border-color: var(--secondary-color);
 }
 
 .button-secondary:hover {
-    background: slategray;
-    color: white;
+    background: var(--secondary-color);
+    color: var(--base-background);
 }
 
 .button-list {
@@ -50,6 +101,10 @@
 .textbox {
     font-size: 1.2em;
     margin-left: 0.2em;
+    background: var(--base-background);
+    border: 0.1em solid var(--base-color);
+    border-radius: 0.1em;
+    color: var(--base-color);
 }
 
 .border {
@@ -58,24 +113,11 @@
 }
 
 .border-focus {
-    border: 0.1em solid black;
+    border: 0.1em solid var(--base-color);
     border-radius: 0.2em;
 }
 
 .border-done {
-    border: 0.1em solid slategray;
+    border: 0.1em solid var(--secondary-color);
     border-radius: 0.2em;
-}
-
-#todo {
-    display: grid;
-    grid-template-columns: auto 60em auto;
-    grid-template-rows: 1fr auto 1fr;
-}
-
-.main {
-    grid-column: 2;
-    grid-row: 2;
-    display: flex;
-    flex-direction: column;
 }

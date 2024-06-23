@@ -55,7 +55,7 @@
 }
 
 .todolist-todo {
-    border: 0.1em solid darkgray;
+    border: 0.1em solid var(--secondary-color);
     border-radius: 0.2em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -66,8 +66,8 @@
 }
 
 .todolist-todo-done {
-    border-color: slategray;
-    color: slategray;
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
 }
 
 .todolist-empty {
