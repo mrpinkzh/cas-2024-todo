@@ -6,6 +6,13 @@
     min-width: 15em;
 }
 
+.todo-title-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 /* todo-creation */
 .todo-new-panel {
     display: flex;
