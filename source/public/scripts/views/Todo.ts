@@ -42,7 +42,7 @@ const Todo = (todo: TodoModel) => (`
             </div>
             <div class="form-input">
               <label for="importance">importance </label>
-              <input class="textbox" type="number" name="importance" value="${todo.importance}" min="1" max="10" value="1" required/>
+              <input class="textbox" type="number" name="importance" value="${todo.importance}" min="1" max="5" value="1" required/>
             </div>
             <div class="form-input">
               <label for="dueDate">due date </label>

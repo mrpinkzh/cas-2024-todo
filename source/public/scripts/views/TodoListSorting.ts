@@ -34,7 +34,9 @@ const TodoListSorting = (context: TodoApplicationContext): TodoApplicationView =
     template: (model) => `
       <div class="todolist-sorting">
         ${model.todoList.sortBy instanceof TodosSorted
-            ? ` <button class="button" id="btnSort">Sort by: ${model.todoList.sortBy.criteria}</button>`
+            ? ` <div>
+                  <button class="button" id="btnSort">Sort by: ${model.todoList.sortBy.criteria}</button>
+                </div>`
             : model.todoList.sortBy instanceof TodosSorting
                 ? ` <div class="todolist-sorting-expanded">
                       <label for="sortButtonList">Sort by:</label>
@@ -45,7 +47,9 @@ const TodoListSorting = (context: TodoApplicationContext): TodoApplicationView =
                     </div>`
                 : ``}
         ${model.todoList.filter instanceof TodosFiltered
-            ? ` <button class="button" id="btnFilter">Filter: ${model.todoList.filter.criteria}</button>`
+            ? ` <div>
+                  <button class="button" id="btnFilter">Filter: ${model.todoList.filter.criteria}</button>
+                </div>`
             : model.todoList.filter instanceof TodosFiltering
                 ? ` <div class="todolist-sorting-expanded">
                       <label for="filterButtonList">Filter: </label>

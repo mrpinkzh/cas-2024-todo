@@ -24,7 +24,7 @@ const App = (context: TodoApplicationContext): TodoApplicationView => {
     template: (model: TodosModel) => `
           <div class="layout ${model.theme}">
             <div class="main">
-              <div class="todo-title">
+              <div class="todo-title-panel">
                 <h1>Note App</h1>
                 <div>
                   <button class="button" id="btnTheme">Theme</button>
